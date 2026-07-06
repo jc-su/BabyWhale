@@ -37,6 +37,18 @@ the language-model loss — DeepSeek-V3's aux-loss-free balancing.
 
 ## 3 · In the code
 
+Routing, in `moe.py` (`_learned_routes` + `_maybe_update_bias`):
+
+```python
+scores = mx.sqrt(nn.softplus(router_logits))                     # gating scores
+biased = scores + self._bias_array(scores.dtype)                 # bias shifts SELECTION
+indices = mx.argsort(biased, axis=-1)[..., -self.experts_per_token:]   # top-k experts
+values = mx.take_along_axis(scores, indices, axis=-1)            # raw (unbiased) gates
+weights = values / mx.maximum(mx.sum(values, axis=-1, keepdims=True), 1e-12)
+# bias update (no grad): bias[i] -= rate if over-used, += rate if under-used
+```
+
+
 - `baby_whale_v4/moe.py` — `class SparseMoE`; the aux-loss-free per-expert bias
   (`router_bias`, `aux_free_bias_rate`) is a non-array leaf so it stays out of the
   gradient tree.

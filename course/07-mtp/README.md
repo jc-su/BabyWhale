@@ -32,6 +32,14 @@ the main LM head uses, so the extra heads are good enough to *draft* for specula
 
 ## 3 · In the code
 
+The whole head (`mtp.py`, `MTPHead`) — a projection off the *hidden state*:
+
+```python
+def __call__(self, h: mx.array) -> mx.array:
+    return self.head(nn.silu(self.transform(h)))
+```
+
+
 - `baby_whale_v4/mtp.py` — `class MTPHead` (projects the last hidden state to a token
   distribution at `t+k`).
 - `baby_whale_v4/model.py` — `self.mtp` heads; the forward returns `mtp_logits`, the

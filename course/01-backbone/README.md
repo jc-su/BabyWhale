@@ -35,6 +35,17 @@ un-normalized, so gradients flow cleanly through all `n_layer` blocks.
 
 ## 3 · In the code
 
+The block forward — pre-norm, sublayer, residual add-back (`model.py`, `BabyWhaleV4Block`):
+
+```python
+x = self.hc.consume(h, layer_idx=self.layer_idx, sublayer_idx=0)
+x = self.ln_1(x)                                    # pre-norm
+delta_a = self.attn(x, cache=cache, positions=positions, key_mask=key_mask)
+h = self.hc.produce(h, delta_a, layer_idx=self.layer_idx, sublayer_idx=0)
+# ... then the same pattern for the MoE sublayer (ln_2 -> moe -> produce) ...
+```
+
+
 - `baby_whale_v4/model.py` — `class BabyWhaleV4Block` (the two-sublayer residual block)
   and `class BabyWhaleV4Model` (embed → blocks → norm → `lm_head`).
 - `baby_whale_v4/layers.py` — `class RMSNorm`, `class WhaleLinear`.

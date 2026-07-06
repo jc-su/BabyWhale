@@ -38,6 +38,19 @@ cache ~`n_head`× — the memory win you bank in Module 14.
 
 ## 3 · In the code
 
+The whole operation (`attention.py`, `SlidingMQAAttention`):
+
+```python
+q = self._split_heads(self.q_proj(x), self.n_head)
+k = self._split_heads(self.k_proj(x), self.n_kv_head)   # MQA: fewer KV heads than Q heads
+q, k = self.rope(q, k, positions)                        # rotary positions
+scores = (q @ k_e.swapaxes(-2, -1)) / math.sqrt(self.head_dim)
+causal = key_pos <= q_pos                                # no future
+local = key_pos >= (q_pos - self.sliding_window + 1)     # only the last W
+weights = self.attn_dropout(_masked_softmax(scores, causal & local))
+```
+
+
 - `baby_whale_v4/attention.py` — `class SlidingMQAAttention` (`_attend`: build the
   causal + sliding mask, softmax, weight the values).
 - `baby_whale_v4/layers.py` — `class PartialRotaryEmbedding` (the RoPE rotation;

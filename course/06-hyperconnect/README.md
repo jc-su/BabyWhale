@@ -33,6 +33,21 @@ Why learnable (vs a fixed `x + f(x)`)? `hc_mult=1` recovers the plain residual e
 
 ## 3 · In the code
 
+`consume` and `produce`, in `mhc.py`:
+
+```python
+def consume(self, h, layer_idx, sublayer_idx):        # read a learned mix
+    weights = mx.softmax(self.input_logits[layer_idx, sublayer_idx], axis=-1)
+    return mx.einsum("btkd,k->btd", h, weights)
+
+def produce(self, h, delta, layer_idx, sublayer_idx): # mix streams, then write back
+    mix = sinkhorn(self.mix_logits[layer_idx, sublayer_idx])
+    h_mixed = mx.einsum("btkd,jk->btjd", h, mix)
+    write = mx.softmax(self.write_logits[layer_idx, sublayer_idx], axis=-1)
+    return h_mixed + delta[:, :, None, :] * write.reshape(1, 1, -1, 1)
+```
+
+
 - `baby_whale_v4/mhc.py` — `class HyperConnect` (`expand`, `consume`, `produce`,
   `reduce`).
 - `baby_whale_v4/model.py` — the block calls `hc.consume(...)` before each sublayer and

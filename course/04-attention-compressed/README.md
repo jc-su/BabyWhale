@@ -38,6 +38,17 @@ sliding window can't reach at all.
 
 ## 3 · In the code
 
+HCA = local raw window **+** compressed distant blocks (`attention.py`, `HCAAttention`):
+
+```python
+comp_k, n_blocks = _block_mean_pool(k_e, self.block_size)   # summarize far blocks
+combined_k = mx.concatenate([comp_k, k_e], axis=2)          # compressed + raw local
+comp_allowed = block_end <= (q_pos - self.sliding_window + 1)  # blocks only beyond the window
+raw_allowed = (raw_pos <= q_pos) & (raw_pos >= q_pos - self.sliding_window + 1)  # local, in full
+mask = mx.concatenate([comp_allowed, raw_allowed], axis=1)
+```
+
+
 - `baby_whale_v4/attention.py` — `class HCAAttention` (block mean-pool) and
   `class CSAAttention` (overlap pool + top-k index).
 - `baby_whale_v4/config/__init__.py` — `layer_schedule` chooses the kind per layer;

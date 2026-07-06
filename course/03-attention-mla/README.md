@@ -59,6 +59,19 @@ fidelity for memory — the exact knob beat 5 asks you to turn.
 
 ## 3 · In the code
 
+The forward, in five lines (`attention.py`, `MLAAttention`):
+
+```python
+c_kv_new = self.kv_a_proj(x)                       # compress x -> latent [B, T, R]
+c_kv_full = cache.append_latent(self.layer_idx, c_kv_new)   # cache the LATENT, not K/V
+kv = self.kv_b_proj(c_kv_full)                     # up-project -> [B, T, 2*H*D]
+kv = kv.reshape(batch, T_full, 2, self.n_head, self.head_dim)
+k = kv[:, :, 0].transpose(0, 2, 1, 3)              # per-head K, rebuilt at use
+v = kv[:, :, 1].transpose(0, 2, 1, 3)              # per-head V
+# ... rope(k), rope(q), then ordinary softmax(qKᵀ/√d)·V ...
+```
+
+
 - **`baby_whale_v4/attention.py:268` — `class MLAAttention`.** The docstring spells
   out the compression: the input becomes one low-rank latent `c_kv` of dimension
   `kv_lora_rank`.
