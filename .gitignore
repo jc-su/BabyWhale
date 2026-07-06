@@ -1,0 +1,23 @@
+.ipynb_checkpoints/
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.venv/
+*.egg-info/
+*.swp
+.env
+.pylintrc
+.DS_Store
+
+# Model runs: checkpoints, packed data, and corpora — never published
+# (size, plus training-data provenance must be resolved before any dataset ships).
+runs/
+*.bw4
+*.npz
+
+# Copyrighted reference material (e.g. the DeepSeek paper PDF).
+*.pdf
+
+# Local session / caveat dumps.
+2026-*.txt

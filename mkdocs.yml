@@ -1,0 +1,64 @@
+site_name: Baby Whale — the course
+site_description: One tiny model's journey through the entire LLM lifecycle.
+docs_dir: course
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Home: README.md
+  - Part 0 · The map:
+      - 00 · The map: 00-the-map/README.md
+  - Part 1 · Architecture (born):
+      - 01 · Backbone: 01-backbone/README.md
+      - 02 · Attention basics: 02-attention-basics/README.md
+      - 03 · MLA ⭐: 03-attention-mla/README.md
+      - 04 · Compressed attention: 04-attention-compressed/README.md
+      - 05 · Mixture of Experts: 05-moe/README.md
+      - 06 · HyperConnect: 06-hyperconnect/README.md
+      - 07 · Multi-token prediction: 07-mtp/README.md
+  - Part 2 · Data:
+      - 08 · Tokenizer & data: 08-tokenizer-and-data/README.md
+  - Part 3 · Pre-training (learns to read):
+      - 09 · Pre-training: 09-pretraining/README.md
+  - Part 4 · Mid-training (specializes):
+      - 10 · Mid-training: 10-midtraining/README.md
+  - Part 5–7 · Post-training:
+      - 11 · SFT: 11-sft/README.md
+      - 12 · DPO: 12-dpo/README.md
+      - 13 · RL with verifiable rewards: 13-rl-grpo/README.md
+  - Part 8 · Inference & serving (goes to work):
+      - 14 · KV cache: 14-kv-cache/README.md
+      - 15 · Paged KV & offload: 15-paged-kv-offload/README.md
+      - 16 · Speculative decoding: 16-speculative-decoding/README.md
+      - 17 · Continuous batching: 17-continuous-batching/README.md
+  - Part 9 · Efficiency (gets compressed):
+      - 18 · Quantization: 18-quantization/README.md
+  - Part 10 · Evaluation (is judged):
+      - 19 · Evaluation: 19-evaluation/README.md
+  - Part 11 · Frontier:
+      - 20 · Vision (VL2): 20-vision-vl2/README.md
+      - 21 · Capstone: 21-capstone/README.md
+  - Write a module: CONTRIBUTING-A-MODULE.md

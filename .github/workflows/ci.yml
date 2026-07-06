@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ruff · ty · tests (Python 3.14, MLX)
+    # Apple Silicon runner — MLX requires arm64 / Metal. macos-14 and -15 are M-series.
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies (uv provisions Python 3.14 per .python-version)
+        run: uv sync --dev
+
+      - name: Ruff format check
+        run: uv run ruff format --check baby_whale_v4 tests course
+
+      - name: Ruff lint
+        run: uv run ruff check baby_whale_v4 tests course
+
+      - name: Type check (ty)
+        run: uv run ty check .
+
+      - name: Unit tests
+        run: uv run python -m unittest discover -s tests

@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baby-whale-v4"
+version = "0.2.0"
+description = "Educational Baby Whale v4 research code"
+readme = "README.md"
+requires-python = ">=3.14"
+license = { text = "MIT" }
+dependencies = [
+  "datasets>=4.4.1",
+  "jaxtyping>=0.2.34",
+  "mlx>=0.31.2",
+  "numpy>=2.4.4",
+]
+
+[project.scripts]
+baby-whale-v4 = "baby_whale_v4.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["baby_whale_v4*"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+src = ["baby_whale_v4", "tests"]
+extend-exclude = ["refs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+# F722: "syntax error in forward annotation" — jaxtyping uses string-based
+# shape specs like Float[mx.array, "B T D"] which ruff misreads as forward
+# annotations and tries to parse "B T D" as Python. The shape strings are
+# valid jaxtyping; suppress this category project-wide.
+# F821: same root cause — jaxtyping shape variables look like undefined
+# names to ruff.
+# UP037: unquote forward annotations — jaxtyping shape strings *must* stay
+# quoted ("G R V"), and the autofix strips single-letter ones ("G" → G)
+# which then read as undefined names. Suppress to keep ruff out of the
+# jaxtyping shape-spec syntax.
+ignore = ["E501", "F722", "F821", "UP037"]
+fixable = ["ALL"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["baby_whale_v4"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ty.src]
+exclude = ["refs/"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.12",
+    "ty>=0.0.34",
+]
