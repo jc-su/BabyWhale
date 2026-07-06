@@ -290,3 +290,79 @@ def grade_kv_append(fn: AppendFn) -> None:
     assert tuple(out.shape) == (1, 2, 4, 4), "cache grows by one along the time axis"
     assert bool(mx.allclose(out[:, :, :3, :], k_cache, atol=1e-6)), "past keys are preserved"
     assert bool(mx.allclose(out[:, :, 3:, :], k_new, atol=1e-6)), "the new key lands at the end"
+
+
+# --- Module 05: the SwiGLU expert FFN ---------------------------------------
+# Each MoE expert is a gated MLP. Graded against the REAL SwiGLUExpert, so you
+# build the actual component, not a toy of it.
+
+
+def swiglu_reference(x, w_gate, w_up, w_down, clamp):
+    gate = mx.clip(w_gate(x), -clamp, clamp)
+    up = mx.clip(w_up(x), -clamp, clamp)
+    return w_down((gate * mx.sigmoid(gate)) * up)
+
+
+def grade_swiglu(fn) -> None:
+    from baby_whale_v4.layers import SwiGLUExpert
+
+    mx.random.seed(0)
+    expert = SwiGLUExpert(16, 32)
+    expert.eval()
+    x = mx.random.normal((4, 16))
+    out = fn(x, expert.w_gate, expert.w_up, expert.w_down, expert.clamp)
+    assert bool(mx.allclose(out, expert(x), atol=1e-4)), (
+        "swiglu = w_down( silu(clip(w_gate·x)) * clip(w_up·x) ) — must match the real SwiGLUExpert"
+    )
+
+
+# --- Module 07: the MTP head ------------------------------------------------
+# Predict a future token from the hidden state. Graded against the REAL MTPHead.
+
+
+def mtp_head_reference(h, transform, head):
+    t = transform(h)
+    return head(t * mx.sigmoid(t))
+
+
+def grade_mtp_head(fn) -> None:
+    from baby_whale_v4.mtp import MTPHead
+
+    mx.random.seed(0)
+    mtp = MTPHead(16, 50)
+    mtp.eval()
+    h = mx.random.normal((2, 4, 16))
+    assert bool(mx.allclose(fn(h, mtp.transform, mtp.head), mtp(h), atol=1e-4)), (
+        "mtp = head(silu(transform(h))) — must match the real MTPHead"
+    )
+
+
+# --- Module 01: ASSEMBLE a transformer layer --------------------------------
+# The composition step: wire your components into one pre-norm residual layer,
+# built from the REAL RMSNorm, attention, and SwiGLU modules. hc_mult=1 form;
+# Module 06 upgrades the plain residual to a learned multi-branch one.
+
+
+def transformer_layer_reference(x, ln1, attn, ln2, ffn):
+    h = x + attn(ln1(x))
+    return h + ffn(ln2(h))
+
+
+def grade_transformer_layer(fn) -> None:
+    from baby_whale_v4 import BabyWhaleV4Config
+    from baby_whale_v4.attention import SlidingMQAAttention
+    from baby_whale_v4.layers import RMSNorm, SwiGLUExpert
+
+    mx.random.seed(0)
+    cfg = BabyWhaleV4Config.tiny(vocab_size=64, context_length=16)
+    ln1, ln2 = RMSNorm(cfg.n_embd), RMSNorm(cfg.n_embd)
+    attn = SlidingMQAAttention(cfg, 0)
+    ffn = SwiGLUExpert(cfg.n_embd, cfg.moe_intermediate_size)
+    attn.eval()
+    ffn.eval()
+    x = mx.random.normal((1, 8, cfg.n_embd))
+    out = fn(x, ln1, attn, ln2, ffn)
+    assert tuple(out.shape) == tuple(x.shape), "a layer preserves shape"
+    assert bool(mx.allclose(out, transformer_layer_reference(x, ln1, attn, ln2, ffn), atol=1e-4)), (
+        "pre-norm residual: h = x + attn(ln1(x)); out = h + ffn(ln2(h))"
+    )

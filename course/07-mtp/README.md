@@ -50,4 +50,12 @@ whose `SpecDecodeResult.acceptance_rate` you'll measure in Module 16.
 - Set `mtp_heads=0`: speculative decoding is no longer available. Why?
 - Raise `mtp_loss_weight` — does forcing multi-token prediction help or hurt main loss?
 
+## 🔨 Build — implement the MTP head yourself
+
+```bash
+uv run python course/07-mtp/lab_mtp.py
+```
+
+Graded against the real `MTPHead`. See the [Build track](../BUILD.md).
+
 **Next:** [08 · Tokenizer & data](../08-tokenizer-and-data/README.md) — what the model actually eats.

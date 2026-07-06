@@ -15,6 +15,10 @@ The **same checkpoint travels through every module.** Each module ends on a *mea
 number — because this repo ships `bench` and 290+ tests, "what's the gain?" is a command,
 not a claim.
 
+> **Want to build it, not just read it?** → the **[Build track](BUILD.md)**: implement each
+> real component yourself — graded against the *actual* module — then assemble a working
+> model and prove it on a real task, TinyTorch-style.
+
 ## How each module works — three tracks
 
 Every module has the same shape. Pick your depth:

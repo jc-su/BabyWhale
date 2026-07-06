@@ -62,13 +62,14 @@ unbalanced one collapses onto a few.
 - Set `aux_free_bias_rate=0` and watch experts collapse.
 - Set `experts_per_token = n_expert` — you've rebuilt a (slow) dense layer. Why?
 
-## 🔨 Build — implement top-k routing yourself
+## 🔨 Build — implement it yourself
 
 ```bash
-uv run python course/05-moe/lab_moe_route.py
+uv run python course/05-moe/lab_moe_route.py   # top-k routing
+uv run python course/05-moe/lab_swiglu.py      # the SwiGLU expert (graded vs the real one)
 ```
 
-The lab derives softmax → top-k → renormalize — the *standard* formulation; `baby_whale_v4`
-gates with √softplus instead (same top-k idea, different squashing).
+The routing lab derives softmax → top-k → renormalize — the *standard* formulation;
+`baby_whale_v4` gates with √softplus (same top-k idea, different squashing).
 
 **Next:** [06 · HyperConnect](../06-hyperconnect/README.md) — is `x + f(x)` really the best residual?

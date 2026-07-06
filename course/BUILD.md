@@ -1,0 +1,78 @@
+# Build the LLM — the build track
+
+Reading the course teaches you *how it works*. This track makes you **build it** — like
+TinyTorch, you implement each real component yourself, and it's **graded against the actual
+`baby_whale_v4` module**, not a toy. Then you assemble the pieces into a working model and
+prove it on a real task.
+
+> **What you build (and what you don't).** `baby_whale_v4` sits on **MLX**, which already
+> gives you tensors, autograd, and matmul — so, unlike TinyTorch, you don't rebuild the
+> framework. You build the **LLM**: the architecture, the training objectives, and the
+> inference machinery, using MLX primitives. That's the layer that makes an LLM an LLM.
+
+## How a build lab works
+
+Each lab is a `lab_*.py` with a `NotImplementedError` stub and a **from-theory-to-code**
+derivation in its docstring (math → code → *why*). You fill it in; running it grades your
+version against the real thing:
+
+```bash
+uv run python course/01-backbone/lab_rmsnorm.py    # fails until you implement it
+# ...edit the file...
+uv run python course/01-backbone/lab_rmsnorm.py    # PASS ✅ = you built the real component
+```
+
+The graders live in `course/labs.py`; the course's own test suite proves every reference
+solution passes its grader, so the autograder itself is verified.
+
+## The build order
+
+Follow it top to bottom — each step leans on the ones above (you can't fake the composition
+step without the components under it).
+
+### Phase 1 · Build a transformer layer
+| # | Build | Lab |
+|---|-------|-----|
+| 1 | **RMSNorm** | `01-backbone/lab_rmsnorm.py` |
+| 2 | **RoPE** (rotary positions) | `02-attention-basics/lab_rope.py` |
+| 3 | **Scaled dot-product attention** | `02-attention-basics/lab_attention.py` |
+| 4 | **SwiGLU expert** (the FFN) | `05-moe/lab_swiglu.py` |
+| 5 | **⭐ Assemble the transformer layer** (composes 1–4) | `01-backbone/lab_transformer_layer.py` |
+
+### Phase 2 · Architecture upgrades
+| # | Build | Lab |
+|---|-------|-----|
+| 6 | **MLA** low-rank KV | `03-attention-mla/lab_mla.py` |
+| 7 | **MoE top-k routing** | `05-moe/lab_moe_route.py` |
+| 8 | **MTP head** | `07-mtp/lab_mtp.py` |
+
+### Phase 3 · Training
+| # | Build | Lab |
+|---|-------|-----|
+| 9 | **Cross-entropy** (the pre-training objective) | `09-pretraining/lab_cross_entropy.py` |
+| 10 | **DPO loss** | `12-dpo/lab_dpo.py` |
+| 11 | **GRPO group advantage** | `13-rl-grpo/lab_grpo.py` |
+
+### Phase 4 · Inference
+| # | Build | Lab |
+|---|-------|-----|
+| 12 | **KV-cache append** | `14-kv-cache/lab_kv_append.py` |
+| 13 | **Speculative acceptance** | `16-speculative-decoding/lab_spec_accept.py` |
+
+## Then: prove it works
+
+Building a *piece* is one thing; the [**milestones**](MILESTONES.md) prove the *assembled
+system* works on a real task — it learns, it remembers, it reasons. That's the payoff:
+you took a model from components you wrote to a thing that actually does the job.
+
+## Honest coverage
+
+13 components have graded build labs today (each checked against the real module or the real
+formula). The remaining modules — compressed attention, HyperConnect, mid-training, SFT,
+paged-KV, continuous batching, quantization, evaluation, vision — are currently **Read +
+Extend**. Turning each into a graded build lab is the roadmap, and the mechanism is always
+the same: a grader in `course/labs.py` that compares your implementation to `baby_whale_v4`'s
+real one. **PRs that add a build lab are the most welcome contribution** — see
+[`CONTRIBUTING-A-MODULE.md`](CONTRIBUTING-A-MODULE.md).
+
+**Start:** [00 · The map](00-the-map/README.md), then work the table above.

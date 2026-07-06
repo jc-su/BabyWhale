@@ -59,12 +59,14 @@ a model how big it is: `BabyWhaleV4Model(cfg).num_parameters()`.
 - Set `n_layer=1` in a preset and re-run the journey — how much worse?
 - Remove the residual (mentally): why would deep stacks stop training?
 
-## 🔨 Build — implement RMSNorm yourself
+## 🔨 Build — implement it yourself
 
 ```bash
-uv run python course/01-backbone/lab_rmsnorm.py
+uv run python course/01-backbone/lab_rmsnorm.py            # RMSNorm
+uv run python course/01-backbone/lab_transformer_layer.py  # assemble a real transformer layer
 ```
 
-The lab docstring walks math → code → *why* (why RMSNorm drops LayerNorm's mean-centering).
+Each docstring walks math → code → *why*; the layer lab is graded against the **real**
+`baby_whale_v4` modules. See the [Build track](../BUILD.md) for the full order.
 
 **Next:** [02 · Attention basics](../02-attention-basics/README.md) — how a token looks at other tokens.

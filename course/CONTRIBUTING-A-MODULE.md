@@ -37,7 +37,10 @@ repeats the derivation has the learner write it.
   function in `course/labs.py` that checks against a reference — **the repo's tests
   are the autograder.** The grader lives in `course/labs.py` (importable + tested);
   the learner stub lives in `NN-slug/lab_*.py` and bootstraps the repo root onto
-  `sys.path` so `from course.labs import ...` works when run directly.
+  `sys.path` so `from course.labs import ...` works when run directly. **Prefer grading
+  against the *real module*** (build the actual component, weight-shared — see
+  `grade_swiglu` / `grade_transformer_layer`) over a toy reference, and add the lab to the
+  [build track](BUILD.md).
 - **🚀 Extend** — 1–3 open-ended prompts that could become real PRs.
 
 ## Conventions

@@ -29,16 +29,22 @@ from course.labs import (
     grade_kv_append,
     grade_mla_roundtrip,
     grade_moe_route,
+    grade_mtp_head,
     grade_rms_norm,
     grade_rope,
     grade_spec_accept,
+    grade_swiglu,
+    grade_transformer_layer,
     group_advantages_reference,
     kv_append_reference,
     mla_roundtrip_reference,
     moe_route_reference,
+    mtp_head_reference,
     rms_norm_reference,
     rope_reference,
     spec_accept_reference,
+    swiglu_reference,
+    transformer_layer_reference,
 )
 from course.milestones import FAST_MILESTONES
 from course.presets import LADDER, load_preset
@@ -135,6 +141,19 @@ class TestFoundationLabs(unittest.TestCase):
 
     def test_kv_append(self) -> None:
         grade_kv_append(kv_append_reference)
+
+
+class TestBuildLabs(unittest.TestCase):
+    """Build-the-real-component labs — each graded against the actual module."""
+
+    def test_swiglu(self) -> None:
+        grade_swiglu(swiglu_reference)
+
+    def test_mtp_head(self) -> None:
+        grade_mtp_head(mtp_head_reference)
+
+    def test_transformer_layer(self) -> None:
+        grade_transformer_layer(transformer_layer_reference)
 
 
 class TestRunnableAblations(unittest.TestCase):

@@ -29,6 +29,7 @@ markdown_extensions:
 
 nav:
   - Home: README.md
+  - Build the LLM: BUILD.md
   - Milestones: MILESTONES.md
   - Part 0 · The map:
       - 00 · The map: 00-the-map/README.md
