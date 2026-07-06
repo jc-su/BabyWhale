@@ -49,4 +49,12 @@ on size and tokens/sec (`bench-compare`), and check the quality cost with an eva
 
 - Quantize `lm_head` too — watch quality drop. Why is the output projection sensitive?
 
+## 🔨 Build — implement quantize / dequantize yourself
+
+```bash
+uv run python course/18-quantization/lab_quantize.py
+```
+
+The symmetric absmax round-trip (the repo ships group-affine / NVFP4 — same idea).
+
 **Next:** [19 · Evaluation](../19-evaluation/README.md) — how do you *know* any of this worked?

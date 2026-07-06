@@ -366,3 +366,65 @@ def grade_transformer_layer(fn) -> None:
     assert bool(mx.allclose(out, transformer_layer_reference(x, ln1, attn, ln2, ffn), atol=1e-4)), (
         "pre-norm residual: h = x + attn(ln1(x)); out = h + ffn(ln2(h))"
     )
+
+
+# --- Module 06: HyperConnect `consume` --------------------------------------
+# Read a *learned* mix of the parallel residual streams. Graded against the REAL
+# HyperConnect.consume.
+
+
+def hc_consume_reference(h, input_logits):
+    weights = mx.softmax(input_logits, axis=-1)
+    return mx.einsum("btkd,k->btd", h, weights)
+
+
+def grade_hc_consume(fn) -> None:
+    from baby_whale_v4.mhc import HyperConnect
+
+    mx.random.seed(0)
+    hc = HyperConnect(hc_mult=3, n_layer=2)
+    hc.input_logits = mx.random.normal(hc.input_logits.shape)  # non-uniform mix weights
+    h = mx.random.normal((1, 4, 3, 8))  # [B, T, hc_mult, D]
+    assert bool(mx.allclose(fn(h, hc.input_logits[0, 0]), hc.consume(h, 0, 0), atol=1e-4)), (
+        "consume = einsum('btkd,k->btd', h, softmax(logits)) — must match the real HyperConnect"
+    )
+
+
+# --- Module 15: paged-KV address translation --------------------------------
+# The heart of paging: map a logical token position to (physical block, offset)
+# via the block table. This is exactly `keys[blocks[t // bs], :, t % bs, :]`.
+
+
+def paged_location_reference(blocks, t, block_size):
+    return blocks[t // block_size], t % block_size
+
+
+def grade_paged_location(fn) -> None:
+    blocks = [5, 2, 7, 0]  # logical block -> physical block index
+    assert fn(blocks, 0, 16) == (5, 0), "token 0 -> logical block 0 (physical 5), offset 0"
+    assert fn(blocks, 20, 16) == (2, 4), "token 20 -> logical block 1 (physical 2), offset 4"
+    assert fn(blocks, 33, 16) == (7, 1), "token 33 -> logical block 2 (physical 7), offset 1"
+
+
+# --- Module 18: symmetric absmax quantize/dequantize ------------------------
+# The core low-bit round-trip: pick a scale from the max magnitude, round to an
+# integer grid, scale back. (The repo uses group-affine / NVFP4; this is the
+# simplest real variant — same idea, one scale for the whole tensor.)
+
+
+def quantize_dequantize_reference(w, bits):
+    qmax = 2 ** (bits - 1) - 1
+    scale = mx.max(mx.abs(w)) / qmax
+    w_q = mx.clip(mx.round(w / scale), -qmax, qmax)
+    return w_q * scale
+
+
+def grade_quantize_dequantize(fn) -> None:
+    mx.random.seed(0)
+    w = mx.random.normal((8, 8))
+    deq = fn(w, 4)  # 4-bit
+    assert bool(mx.allclose(deq, quantize_dequantize_reference(w, 4), atol=1e-5)), (
+        "scale = max|w|/qmax; w_q = clip(round(w/scale)); return w_q * scale"
+    )
+    step = float(mx.max(mx.abs(w))) / (2 ** (4 - 1) - 1)
+    assert float(mx.max(mx.abs(deq - w))) <= step * 1.01, "round-trip error within one quant step"

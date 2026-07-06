@@ -45,19 +45,26 @@ step without the components under it).
 | 6 | **MLA** low-rank KV | `03-attention-mla/lab_mla.py` |
 | 7 | **MoE top-k routing** | `05-moe/lab_moe_route.py` |
 | 8 | **MTP head** | `07-mtp/lab_mtp.py` |
+| 9 | **HyperConnect** learned stream mix | `06-hyperconnect/lab_hyperconnect.py` |
 
 ### Phase 3 · Training
 | # | Build | Lab |
 |---|-------|-----|
-| 9 | **Cross-entropy** (the pre-training objective) | `09-pretraining/lab_cross_entropy.py` |
-| 10 | **DPO loss** | `12-dpo/lab_dpo.py` |
-| 11 | **GRPO group advantage** | `13-rl-grpo/lab_grpo.py` |
+| 10 | **Cross-entropy** (the pre-training objective) | `09-pretraining/lab_cross_entropy.py` |
+| 11 | **DPO loss** | `12-dpo/lab_dpo.py` |
+| 12 | **GRPO group advantage** | `13-rl-grpo/lab_grpo.py` |
 
 ### Phase 4 · Inference
 | # | Build | Lab |
 |---|-------|-----|
-| 12 | **KV-cache append** | `14-kv-cache/lab_kv_append.py` |
-| 13 | **Speculative acceptance** | `16-speculative-decoding/lab_spec_accept.py` |
+| 13 | **KV-cache append** | `14-kv-cache/lab_kv_append.py` |
+| 14 | **Speculative acceptance** | `16-speculative-decoding/lab_spec_accept.py` |
+| 15 | **Paged-KV address translation** | `15-paged-kv-offload/lab_paged_location.py` |
+
+### Phase 5 · Efficiency
+| # | Build | Lab |
+|---|-------|-----|
+| 16 | **Quantize / dequantize** (absmax) | `18-quantization/lab_quantize.py` |
 
 ## Then: prove it works
 
@@ -67,10 +74,9 @@ you took a model from components you wrote to a thing that actually does the job
 
 ## Honest coverage
 
-13 components have graded build labs today (each checked against the real module or the real
-formula). The remaining modules — compressed attention, HyperConnect, mid-training, SFT,
-paged-KV, continuous batching, quantization, evaluation, vision — are currently **Read +
-Extend**. Turning each into a graded build lab is the roadmap, and the mechanism is always
+16 components have graded build labs today (each checked against the real module or the real
+formula). The remaining modules — compressed attention, mid-training, SFT, continuous
+batching, evaluation, vision — are currently **Read + Extend**. Turning each into a graded build lab is the roadmap, and the mechanism is always
 the same: a grader in `course/labs.py` that compares your implementation to `baby_whale_v4`'s
 real one. **PRs that add a build lab are the most welcome contribution** — see
 [`CONTRIBUTING-A-MODULE.md`](CONTRIBUTING-A-MODULE.md).

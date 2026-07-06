@@ -26,20 +26,26 @@ from course.labs import (
     grade_cross_entropy,
     grade_dpo,
     grade_group_advantages,
+    grade_hc_consume,
     grade_kv_append,
     grade_mla_roundtrip,
     grade_moe_route,
     grade_mtp_head,
+    grade_paged_location,
+    grade_quantize_dequantize,
     grade_rms_norm,
     grade_rope,
     grade_spec_accept,
     grade_swiglu,
     grade_transformer_layer,
     group_advantages_reference,
+    hc_consume_reference,
     kv_append_reference,
     mla_roundtrip_reference,
     moe_route_reference,
     mtp_head_reference,
+    paged_location_reference,
+    quantize_dequantize_reference,
     rms_norm_reference,
     rope_reference,
     spec_accept_reference,
@@ -154,6 +160,15 @@ class TestBuildLabs(unittest.TestCase):
 
     def test_transformer_layer(self) -> None:
         grade_transformer_layer(transformer_layer_reference)
+
+    def test_hc_consume(self) -> None:
+        grade_hc_consume(hc_consume_reference)
+
+    def test_paged_location(self) -> None:
+        grade_paged_location(paged_location_reference)
+
+    def test_quantize_dequantize(self) -> None:
+        grade_quantize_dequantize(quantize_dequantize_reference)
 
 
 class TestRunnableAblations(unittest.TestCase):

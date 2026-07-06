@@ -51,4 +51,12 @@ training run (Module 09) — does the learned multi-branch residual buy any loss
 - Set `hc_mult=1`: you're back to a vanilla residual. Confirm the model still trains.
 - Trace one token's value through `expand → consume → produce → reduce`.
 
+## 🔨 Build — implement `consume` yourself
+
+```bash
+uv run python course/06-hyperconnect/lab_hyperconnect.py
+```
+
+Graded against the real `HyperConnect.consume` — the learned mix of residual streams.
+
 **Next:** [07 · Multi-token prediction](../07-mtp/README.md) — predict more than one token at once.

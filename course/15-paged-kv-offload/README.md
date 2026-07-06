@@ -50,4 +50,12 @@ contiguous cache for a mix of request lengths — fragmentation is the metric.
 
 - Shrink the block size — less waste per request, more block-table overhead. The tradeoff.
 
+## 🔨 Build — implement the address translation yourself
+
+```bash
+uv run python course/15-paged-kv-offload/lab_paged_location.py
+```
+
+The exact `keys[blocks[t // bs], :, t % bs]` rule the paged cache uses.
+
 **Next:** [16 · Speculative decoding](../16-speculative-decoding/README.md) — decode several tokens per step.
