@@ -23,8 +23,8 @@ main head uses. Two payoffs:
 
 | The math | The code (`mtp.py`, `model.py`) | Why this |
 |----------|---------------------------------|----------|
-| `logitsₖ = MTPₖ(h)` | `mtp["head_k"](x)` | from the *same* hidden state, predict a token beyond the next (head 0 → t+2, head 1 → t+3) |
-| `L += wₘ · Σₖ CE(logitsₖ, targets shifted by k)` | the MTP loss term | a denser training signal per position |
+| $\text{logits}_k = \operatorname{MTP}_k(h)$ | `mtp["head_k"](x)` | from the *same* hidden state, predict a token beyond the next (head 0 $\to t{+}2$, head 1 $\to t{+}3$) |
+| $L \mathrel{+}= w_m \sum_k \operatorname{CE}(\text{logits}_k,\; y\text{ shifted } k{+}1)$ | the MTP loss term | a denser training signal per position |
 
 Why predict from the hidden state (not the token id)? the hidden carries the rich context
 the main LM head uses, so the extra heads are good enough to *draft* for speculation

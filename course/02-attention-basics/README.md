@@ -27,11 +27,11 @@ softmaxes, and reads a weighted sum of values. Three refinements this repo uses:
 
 | The math | The code (`attention.py`, `layers.py`) | Why this |
 |----------|----------------------------------------|----------|
-| `q, k, v = xWq, xWk, xWv` | the q/k/v projections | per-token query / key / value |
-| rotate `q, k` by position | `PartialRotaryEmbedding` | inject *relative* position into the dot-product |
-| `s = q·kᵀ / √d` | `(q @ kᵀ) / √head_dim` | similarity, scaled so softmax stays sharp |
-| keep `j ≤ i` and `j > i − W` | causal + sliding mask | no future; only the last `W` tokens |
-| `a = softmax(s) · v` | softmax then `@ v` | a weighted read of the values |
+| $q, k, v = xW_q,\, xW_k,\, xW_v$ | the q/k/v projections | per-token query / key / value |
+| rotate $q, k$ by position | `PartialRotaryEmbedding` | inject *relative* position into the dot-product |
+| $s = qk^\top / \sqrt{d}$ | `(q @ k.T) / √head_dim` | similarity, scaled so softmax stays sharp |
+| keep $j \le i$ and $j > i - W$ | causal + sliding mask | no future; only the last $W$ tokens |
+| $a = \operatorname{softmax}(s)\,v$ | softmax then `@ v` | a weighted read of the values |
 
 Why MQA (one shared K/V head)? queries still differ per head, but sharing K/V shrinks the
 cache ~`n_head`× — the memory win you bank in Module 14.

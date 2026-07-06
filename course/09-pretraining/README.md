@@ -22,9 +22,9 @@ sequences count fairly), a **learning-rate schedule** (warmup + decay), **throug
 
 | The math | The code | Why this |
 |----------|----------|----------|
-| `L = −mean log p(next token given context)` | `cross_entropy_ignore` | next-token likelihood, ignoring pad/prompt |
+| $L = -\tfrac{1}{N}\sum \log p(x_{t+1} \mid x_{\le t})$ | `cross_entropy_ignore` | next-token likelihood, ignoring pad/prompt |
 | accumulate grads over microbatches, weighted by tokens | grad accumulation | fair averaging across ragged lengths |
-| `θ ← θ − lr·m̂/(√v̂+ε) − lr·λ·θ` | `AdamW.step` | adaptive step + *decoupled* weight decay |
+| $\theta \gets \theta - \text{lr}\,\dfrac{\hat m}{\sqrt{\hat v}+\varepsilon} - \text{lr}\,\lambda\,\theta$ | `AdamW.step` | adaptive step + *decoupled* weight decay |
 
 Why weight accumulation by tokens, not batches? a microbatch with more real tokens should
 count more in the mean loss — otherwise short sequences get over-weighted.

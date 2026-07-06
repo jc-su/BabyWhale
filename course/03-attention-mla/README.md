@@ -48,10 +48,10 @@ Here's the math mapped to the exact operations in `attention.py`'s `MLAAttention
 
 | The math | The code | Why this |
 |----------|----------|----------|
-| `c = x · W_DKV` (latent, dim `r` ≪ d) | the down-projection to `c_kv` | K/V across heads are correlated, so a low-rank `c` keeps most of the signal in `r` numbers |
-| cache `c` | `cache.append_latent(c_kv)` | store `r` per token, not `n_head · head_dim · 2` |
-| `K, V = split(c · W_UKV)` | one up-projection `kv_b_proj` | rebuild all heads' K/V from the latent *at use* → MHA-style head diversity |
-| `softmax(q·Kᵀ / √d) · V` | ordinary attention | unchanged — MLA only changed *what gets cached* |
+| $c = x\,W_{DKV}$ (latent, dim $r \ll d$) | the down-projection to `c_kv` | K/V across heads are correlated, so a low-rank $c$ keeps most of the signal in $r$ numbers |
+| cache $c$ | `cache.append_latent(c_kv)` | store $r$ per token, not $n_\text{head}\cdot d_\text{head}\cdot 2$ |
+| $K, V = \operatorname{split}(c\,W_{UKV})$ | one up-projection `kv_b_proj` | rebuild all heads' K/V from the latent *at use* → MHA-style head diversity |
+| $\operatorname{softmax}\!\big(qK^\top / \sqrt{d}\big)\,V$ | ordinary attention | unchanged — MLA only changed *what gets cached* |
 
 So "8× smaller cache at MHA quality" isn't magic: it's a rank-`r` bottleneck on K/V that
 you pay a matmul to reconstruct. Push `kv_lora_rank` down and you trade reconstruction

@@ -19,9 +19,9 @@ FP4 path is a **fail-fast gate** — no silent fallback that quietly costs quali
 
 | The math | The code (`quantization/`, `mlx_fp4`) | Why this |
 |----------|----------------------------------------|----------|
-| `s = max\|w\| / qmax` | calibration | fit the weights into the 4-bit range |
-| `w_q = round(w / s)` (4-bit) | quantize | store 4-bit codes + one scale per group |
-| `ŵ = w_q · s` at matmul | quantized matmul | move ~4× fewer bytes for the same product |
+| $s = \max\lvert w\rvert / q_{\max}$ | calibration | fit the weights into the 4-bit range |
+| $w_q = \operatorname{round}(w / s)$ (4-bit) | quantize | store 4-bit codes + one scale per group |
+| $\hat w = w_q\, s$ at matmul | quantized matmul | move ~4× fewer bytes for the same product |
 
 Why a per-placement policy? sensitive layers (the `lm_head`, the router) keep high precision
 via `WhaleLinear`'s `placement`, while the bulk (the experts) goes to 4-bit.

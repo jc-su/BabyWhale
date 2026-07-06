@@ -22,9 +22,9 @@ in miniature.
 
 | The math | The code (`training/grpo.py`, `rloo.py`, `rl/`) | Why this |
 |----------|-------------------------------------------------|----------|
-| `rᵢ = verify(rolloutᵢ)` | sandbox reward (`rl/`) | the environment grades — do the tests pass? |
-| GRPO `Aᵢ = (rᵢ − mean r)/std r` · RLOO `Aᵢ = rᵢ − mean(r_{j≠i})` | `grpo.py` / `rloo.py:_leave_one_out_advantage` | score each rollout against its group — no value net |
-| maximize `Σ Aᵢ · log π(rolloutᵢ)` | policy-gradient step | push probability toward above-average rollouts |
+| $r_i = \operatorname{verify}(\text{rollout}_i)$ | sandbox reward (`rl/`) | the environment grades — do the tests pass? |
+| GRPO $A_i = \dfrac{r_i - \bar r}{\operatorname{std}(r)}$ · RLOO $A_i = r_i - \operatorname{mean}(r_{j\ne i})$ | `grpo.py` / `rloo.py:_leave_one_out_advantage` | score each rollout against its group — no value net |
+| maximize $\sum_i A_i \log\pi(\text{rollout}_i)$ | policy-gradient step | push probability toward above-average rollouts |
 
 Why the group baseline? the group mean *is* the value estimate — GRPO also divides by the
 group std, RLOO leaves each sample out — so neither needs a separate learned value network.

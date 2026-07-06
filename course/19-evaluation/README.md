@@ -23,9 +23,9 @@ Evaluation isn't a final step — it's the **measure beat** of every module in t
 
 | The math | The code (`cli/eval.py`, `eval/`) | Why this |
 |----------|-----------------------------------|----------|
-| `bpb = (Σ CE in nats) / (ln 2 · n_bytes)` | `eval-bpb` | a *tokenizer-independent* language-model score |
-| `pass@1 = solved / total` | `eval-code` (sandboxed) | did the generated code actually run? |
-| `acc = retrieved / n` | `eval/needle.py` | long-range retrieval (Module 04) |
+| $\text{bpb} = \dfrac{\sum \text{CE (nats)}}{\ln 2 \cdot n_\text{bytes}}$ | `eval-bpb` | a *tokenizer-independent* language-model score |
+| $\text{pass@1} = \text{solved} / \text{total}$ | `eval-code` (sandboxed) | did the generated code actually run? |
+| $\text{acc} = \text{retrieved} / n$ | `eval/needle.py` | long-range retrieval (Module 04) |
 
 Why bits-per-byte, not perplexity? perplexity depends on the tokenizer; normalizing by
 *bytes* makes scores comparable across different tokenizers.

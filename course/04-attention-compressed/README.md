@@ -28,7 +28,7 @@ both cheap local layers and a few long-reach layers.
 | The math | The code (`attention.py`) | Why this |
 |----------|---------------------------|----------|
 | local: raw keys within the sliding window | the `raw_allowed` mask | recent tokens attended in full |
-| distant (HCA): `k̄_b = mean(block b)` | `_block_mean_pool` + `comp_allowed` | far past → one summary key per block |
+| distant (HCA): $\bar k_b = \operatorname{mean}(\text{block } b)$ | `_block_mean_pool` + `comp_allowed` | far past → one summary key per block |
 | distant (CSA): top-k of learned block scores | `_overlap_mean_pool` + `indexer` + `argsort` | pick the few most relevant *compressed* far blocks |
 
 So both keep a full-detail **local** window and add **compressed** far-past keys — HCA every

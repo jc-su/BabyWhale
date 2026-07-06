@@ -21,8 +21,8 @@ reference forwards.
 
 | The math | The code (`training/dpo.py`) | Why this |
 |----------|------------------------------|----------|
-| `Δ = (log π_c − log π_r) − (log ref_c − log ref_r)` | policy-vs-reference log-ratio | prefer chosen over rejected, relative to the frozen ref |
-| `L = −log σ(β·Δ)` | `-log_sigmoid(β·Δ)` | grow the preference margin |
+| $\Delta = (\log\pi_c - \log\pi_r) - (\log\pi^{\text{ref}}_c - \log\pi^{\text{ref}}_r)$ | policy-vs-reference log-ratio | prefer chosen over rejected, relative to the frozen ref |
+| $L = -\log\sigma(\beta\Delta)$ | `-log_sigmoid(β·Δ)` | grow the preference margin |
 | ref log-ratios precomputed once | `_precompute_ref_logratios` | the ref is frozen → constant across steps |
 
 Why anchor to a reference at all? without it the policy wanders off the SFT distribution

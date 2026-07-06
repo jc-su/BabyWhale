@@ -26,10 +26,10 @@ shows honestly:
 
 | The math | The code (`moe.py`) | Why this |
 |----------|---------------------|----------|
-| `s = √softplus(x·Wᵣ)` | the router (`_learned_routes`) | a per-expert score for this token |
-| top-k of `s + bias` | top-k select | sparse: run only the k best; the bias shifts *selection* only |
-| `gₖ = sₖ / Σ sₖ`;  `y = Σₖ gₖ · Expertₖ(x)` | gated combine (raw `s`, unbiased) | a score-weighted sum of the chosen experts |
-| `biasₑ ∓= rate` when `loadₑ ≷ mean` | `_maybe_update_bias` (no grad) | a fixed step toward balance — over-used down, under-used up |
+| $s = \sqrt{\operatorname{softplus}(x W_r)}$ | the router (`_learned_routes`) | a per-expert score for this token |
+| top-$k$ of $s + \text{bias}$ | top-k select | sparse: run only the $k$ best; the bias shifts *selection* only |
+| $g_k = s_k / \textstyle\sum s$;$\;\;$ $y = \sum_k g_k\, E_k(x)$ | gated combine (raw $s$, unbiased) | a score-weighted sum of the chosen experts |
+| $\Delta\text{bias}_e = \pm\,\text{rate}$ by $\operatorname{sign}(\text{mean}-\text{load}_e)$ | `_maybe_update_bias` (no grad) | a fixed step toward balance — over-used down, under-used up |
 
 (A always-on **shared expert** also runs on every token, alongside the routed ones.) Why a
 bias, not an auxiliary loss? it steers *selection* without a gradient term that competes with

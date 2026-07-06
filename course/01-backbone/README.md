@@ -25,10 +25,10 @@ Tokens in, logits out — as residual updates on one shared stream:
 
 | The math | The code (`model.py`) | Why this |
 |----------|------------------------|----------|
-| `h = Embed(ids)` | `tok_emb(input_ids)` | token ids → vectors |
-| `h += Attn(RMSNorm(h))` | block sublayer 1 | pre-norm residual: mix across tokens, add back |
-| `h += FFN(RMSNorm(h))` | block sublayer 2 | per-token compute, add back |
-| `logits = RMSNorm(h) · Eᵀ` | `lm_head(norm(x))` | project to vocab (weight-tied to `Embed`) |
+| $h = \operatorname{Embed}(\text{ids})$ | `tok_emb(input_ids)` | token ids → vectors |
+| $h \mathrel{+}= \operatorname{Attn}(\operatorname{RMSNorm}(h))$ | block sublayer 1 | pre-norm residual: mix across tokens, add back |
+| $h \mathrel{+}= \operatorname{FFN}(\operatorname{RMSNorm}(h))$ | block sublayer 2 | per-token compute, add back |
+| $\text{logits} = \operatorname{RMSNorm}(h)\, E^\top$ | `lm_head(norm(x))` | project to vocab (weight-tied to `Embed`) |
 
 Why *pre*-norm (norm inside the residual, not around it)? it keeps the residual stream
 un-normalized, so gradients flow cleanly through all `n_layer` blocks.
