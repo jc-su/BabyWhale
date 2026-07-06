@@ -1,6 +1,6 @@
 # 13 · RL with verifiable rewards — learns to reason
 
-**Prereqs:** [12 · DPO](../12-dpo/) · **Unlocks:** reasoning / agent RL.
+**Prereqs:** [12 · DPO](../12-dpo/README.md) · **Unlocks:** reasoning / agent RL.
 
 ## 1 · The wall
 
@@ -61,4 +61,4 @@ uv run python course/13-rl-grpo/lab_grpo.py
 
 Normalize rewards within the group; the grader checks zero-mean and the formula.
 
-**Next:** [14 · KV cache](../14-kv-cache/) — now make the trained model fast to run.
+**Next:** [14 · KV cache](../14-kv-cache/README.md) — now make the trained model fast to run.

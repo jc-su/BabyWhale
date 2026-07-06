@@ -1,8 +1,8 @@
 # 14 · KV cache — goes to work
 
-**Prereqs:** [02 · Attention basics](../02-attention-basics/) · **Unlocks:**
-[15 · Paged KV](../15-paged-kv-offload/), [16 · Speculative](../16-speculative-decoding/),
-[17 · Batching](../17-continuous-batching/).
+**Prereqs:** [02 · Attention basics](../02-attention-basics/README.md) · **Unlocks:**
+[15 · Paged KV](../15-paged-kv-offload/README.md), [16 · Speculative](../16-speculative-decoding/README.md),
+[17 · Batching](../17-continuous-batching/README.md).
 
 ## 1 · The wall
 
@@ -54,4 +54,4 @@ Cached decode is the difference between "a few tokens/sec" and "usable".
 
 - Generate with a tiny vs huge prompt — where does prefill vs decode dominate the time?
 
-**Next:** [15 · Paged KV & offload](../15-paged-kv-offload/) — managing that cache's memory.
+**Next:** [15 · Paged KV & offload](../15-paged-kv-offload/README.md) — managing that cache's memory.

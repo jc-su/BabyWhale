@@ -59,4 +59,4 @@ Each module has five beats — **the wall → the idea → in the code → the p
 wherever the lifecycle table pulls you, but if in doubt, go in order: later legs
 lean on earlier ones.
 
-**Next:** [01 · Backbone](../01-backbone/) — the skeleton every other module hangs on.
+**Next:** [01 · Backbone](../01-backbone/README.md) — the skeleton every other module hangs on.

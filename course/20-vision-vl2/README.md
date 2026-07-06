@@ -1,6 +1,6 @@
 # 20 · Vision (VL2) — the frontier
 
-**Prereqs:** [05 · MoE](../05-moe/), [17 · Continuous batching](../17-continuous-batching/)
+**Prereqs:** [05 · MoE](../05-moe/README.md), [17 · Continuous batching](../17-continuous-batching/README.md)
 · **Unlocks:** multimodal models.
 
 ## 1 · The wall
@@ -55,4 +55,4 @@ sequence while `image_features=None` is a perfect no-op.
 - Flip `enable_vision` and diff the `config_hash` — why must it *not* change when off?
 - Change the image's aspect ratio and watch `plan_tiles` pick a different grid.
 
-**Next:** [21 · Capstone](../21-capstone/) — take *your* model through the whole pipeline.
+**Next:** [21 · Capstone](../21-capstone/README.md) — take *your* model through the whole pipeline.

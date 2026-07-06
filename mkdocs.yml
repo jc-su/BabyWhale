@@ -29,6 +29,7 @@ markdown_extensions:
 
 nav:
   - Home: README.md
+  - Milestones: MILESTONES.md
   - Part 0 · The map:
       - 00 · The map: 00-the-map/README.md
   - Part 1 · Architecture (born):

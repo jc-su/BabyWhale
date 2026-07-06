@@ -81,46 +81,46 @@ bytes/token drop. That's *why we need this*, answered viscerally.
 > stubs follow the same template (see [`CONTRIBUTING-A-MODULE.md`](CONTRIBUTING-A-MODULE.md)).
 
 ### Part 0 · The map
-- **[00 · The map](00-the-map/)** — the lifecycle, and a **5-minute** train→generate run
+- **[00 · The map](00-the-map/README.md)** — the lifecycle, and a **5-minute** train→generate run
 
 ### Part 1 · The architecture (born)
-- **[01 · Backbone](01-backbone/)** — embedding, RMSNorm, residual block, LM head, loss
-- **[02 · Attention basics](02-attention-basics/)** — causal, sliding window, MQA, partial RoPE
-- **[03 · MLA ⭐](03-attention-mla/)** — low-rank latent KV: the cache-memory breakthrough
-- **[04 · Compressed attention](04-attention-compressed/)** — HCA / CSA for long-range reach
-- **[05 · Mixture of Experts](05-moe/)** — sparse experts + aux-loss-free load balancing
-- **[06 · HyperConnect](06-hyperconnect/)** — learned multi-branch residuals (mHC)
-- **[07 · Multi-token prediction](07-mtp/)** — extra heads that pay off at decode time
+- **[01 · Backbone](01-backbone/README.md)** — embedding, RMSNorm, residual block, LM head, loss
+- **[02 · Attention basics](02-attention-basics/README.md)** — causal, sliding window, MQA, partial RoPE
+- **[03 · MLA ⭐](03-attention-mla/README.md)** — low-rank latent KV: the cache-memory breakthrough
+- **[04 · Compressed attention](04-attention-compressed/README.md)** — HCA / CSA for long-range reach
+- **[05 · Mixture of Experts](05-moe/README.md)** — sparse experts + aux-loss-free load balancing
+- **[06 · HyperConnect](06-hyperconnect/README.md)** — learned multi-branch residuals (mHC)
+- **[07 · Multi-token prediction](07-mtp/README.md)** — extra heads that pay off at decode time
 
 ### Part 2 · Data
-- **[08 · Tokenizer & data](08-tokenizer-and-data/)** — byte-BPE (the heap-encode story), packing
+- **[08 · Tokenizer & data](08-tokenizer-and-data/README.md)** — byte-BPE (the heap-encode story), packing
 
 ### Part 3 · Pre-training (learns to read)
-- **[09 · Pre-training](09-pretraining/)** — loop, optimizer, grad-accum, checkpoint/resume, throughput
+- **[09 · Pre-training](09-pretraining/README.md)** — loop, optimizer, grad-accum, checkpoint/resume, throughput
 
 ### Part 4 · Mid-training (specializes)
-- **[10 · Mid-training](10-midtraining/)** — context extension, curriculum, annealing; the needle eval
+- **[10 · Mid-training](10-midtraining/README.md)** — context extension, curriculum, annealing; the needle eval
 
 ### Part 5–7 · Post-training (learns to behave, then to reason)
-- **[11 · SFT](11-sft/)** — chat templating, instruction tuning
-- **[12 · DPO](12-dpo/)** — preference optimization, reference caching
-- **[13 · RL with verifiable rewards](13-rl-grpo/)** — GRPO / RLOO, the code sandbox
+- **[11 · SFT](11-sft/README.md)** — chat templating, instruction tuning
+- **[12 · DPO](12-dpo/README.md)** — preference optimization, reference caching
+- **[13 · RL with verifiable rewards](13-rl-grpo/README.md)** — GRPO / RLOO, the code sandbox
 
 ### Part 8 · Inference & serving (goes to work)
-- **[14 · KV cache](14-kv-cache/)** — the decode speedup that makes generation practical
-- **[15 · Paged KV & offload](15-paged-kv-offload/)** — memory management for long context
-- **[16 · Speculative decoding](16-speculative-decoding/)** — MTP draft + verify, bit-identical
-- **[17 · Continuous batching](17-continuous-batching/)** — the scheduler, cohorts, ragged, the server
+- **[14 · KV cache](14-kv-cache/README.md)** — the decode speedup that makes generation practical
+- **[15 · Paged KV & offload](15-paged-kv-offload/README.md)** — memory management for long context
+- **[16 · Speculative decoding](16-speculative-decoding/README.md)** — MTP draft + verify, bit-identical
+- **[17 · Continuous batching](17-continuous-batching/README.md)** — the scheduler, cohorts, ragged, the server
 
 ### Part 9 · Efficiency (gets compressed)
-- **[18 · Quantization](18-quantization/)** — FP4, placement policies
+- **[18 · Quantization](18-quantization/README.md)** — FP4, placement policies
 
 ### Part 10 · Evaluation (is judged)
-- **[19 · Evaluation](19-evaluation/)** — bits-per-byte, code pass@1, IFEval, needle retrieval
+- **[19 · Evaluation](19-evaluation/README.md)** — bits-per-byte, code pass@1, IFEval, needle retrieval
 
 ### Part 11 · Frontier
-- **[20 · Vision (VL2)](20-vision-vl2/)** — tiling, connector, model integration
-- **[21 · Capstone](21-capstone/)** — take *your* model through the whole pipeline
+- **[20 · Vision (VL2)](20-vision-vl2/README.md)** — tiling, connector, model integration
+- **[21 · Capstone](21-capstone/README.md)** — take *your* model through the whole pipeline
 
 ## Prerequisites & setup
 
@@ -129,4 +129,4 @@ bytes/token drop. That's *why we need this*, answered viscerally.
 - Comfort with Python and basic neural-net ideas (backprop, attention). No prior LLM
   systems knowledge assumed — that's what this builds.
 
-Start at **[00 · The map](00-the-map/)**.
+Start at **[00 · The map](00-the-map/README.md)**.

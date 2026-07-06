@@ -1,7 +1,7 @@
 # 15 · Paged KV & offload
 
-**Prereqs:** [14 · KV cache](../14-kv-cache/) · **Unlocks:**
-[17 · Continuous batching](../17-continuous-batching/).
+**Prereqs:** [14 · KV cache](../14-kv-cache/README.md) · **Unlocks:**
+[17 · Continuous batching](../17-continuous-batching/README.md).
 
 ## 1 · The wall
 
@@ -50,4 +50,4 @@ contiguous cache for a mix of request lengths — fragmentation is the metric.
 
 - Shrink the block size — less waste per request, more block-table overhead. The tradeoff.
 
-**Next:** [16 · Speculative decoding](../16-speculative-decoding/) — decode several tokens per step.
+**Next:** [16 · Speculative decoding](../16-speculative-decoding/README.md) — decode several tokens per step.

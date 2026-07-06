@@ -1,6 +1,6 @@
 # 05 · Mixture of Experts
 
-**Prereqs:** [01 · Backbone](../01-backbone/) · **Unlocks:** [18 · Quantization](../18-quantization/).
+**Prereqs:** [01 · Backbone](../01-backbone/README.md) · **Unlocks:** [18 · Quantization](../18-quantization/README.md).
 
 ## 1 · The wall
 
@@ -71,4 +71,4 @@ uv run python course/05-moe/lab_moe_route.py
 The lab derives softmax → top-k → renormalize — the *standard* formulation; `baby_whale_v4`
 gates with √softplus instead (same top-k idea, different squashing).
 
-**Next:** [06 · HyperConnect](../06-hyperconnect/) — is `x + f(x)` really the best residual?
+**Next:** [06 · HyperConnect](../06-hyperconnect/README.md) — is `x + f(x)` really the best residual?

@@ -1,7 +1,7 @@
 # 07 · Multi-token prediction
 
-**Prereqs:** [01 · Backbone](../01-backbone/) · **Unlocks:**
-[16 · Speculative decoding](../16-speculative-decoding/).
+**Prereqs:** [01 · Backbone](../01-backbone/README.md) · **Unlocks:**
+[16 · Speculative decoding](../16-speculative-decoding/README.md).
 
 ## 1 · The wall
 
@@ -50,4 +50,4 @@ whose `SpecDecodeResult.acceptance_rate` you'll measure in Module 16.
 - Set `mtp_heads=0`: speculative decoding is no longer available. Why?
 - Raise `mtp_loss_weight` — does forcing multi-token prediction help or hurt main loss?
 
-**Next:** [08 · Tokenizer & data](../08-tokenizer-and-data/) — what the model actually eats.
+**Next:** [08 · Tokenizer & data](../08-tokenizer-and-data/README.md) — what the model actually eats.

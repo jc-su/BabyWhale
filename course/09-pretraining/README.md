@@ -1,8 +1,8 @@
 # 09 · Pre-training — learns to read
 
-**Prereqs:** [01 · Backbone](../01-backbone/),
-[08 · Tokenizer & data](../08-tokenizer-and-data/) · **Unlocks:**
-[10 · Mid-training](../10-midtraining/).
+**Prereqs:** [01 · Backbone](../01-backbone/README.md),
+[08 · Tokenizer & data](../08-tokenizer-and-data/README.md) · **Unlocks:**
+[10 · Mid-training](../10-midtraining/README.md).
 
 ## 1 · The wall
 
@@ -54,4 +54,4 @@ uv run baby-whale-v4 pretrain --help               # the real thing
 - Kill a run mid-way and resume from the checkpoint — confirm optimizer state restores.
 - Raise the learning rate until it diverges. Where's the edge?
 
-**Next:** [10 · Mid-training](../10-midtraining/) — from broad to specialized.
+**Next:** [10 · Mid-training](../10-midtraining/README.md) — from broad to specialized.

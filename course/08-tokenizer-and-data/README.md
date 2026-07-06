@@ -1,6 +1,6 @@
 # 08 · Tokenizer & data
 
-**Prereqs:** none · **Unlocks:** [09 · Pre-training](../09-pretraining/).
+**Prereqs:** none · **Unlocks:** [09 · Pre-training](../09-pretraining/README.md).
 
 ## 1 · The wall
 
@@ -55,4 +55,4 @@ It proves the fast encoder is **output-identical** to the slow reference and enc
 - Encode a long repeated string with a tiny vs large `merges` table — watch tokens/char.
 - Train a tokenizer: `uv run baby-whale-v4 train-tokenizer --help`.
 
-**Next:** [09 · Pre-training](../09-pretraining/) — teach the model to read.
+**Next:** [09 · Pre-training](../09-pretraining/README.md) — teach the model to read.

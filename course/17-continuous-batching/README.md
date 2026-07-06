@@ -1,6 +1,6 @@
 # 17 · Continuous batching
 
-**Prereqs:** [14 · KV cache](../14-kv-cache/) · **Unlocks:** production serving.
+**Prereqs:** [14 · KV cache](../14-kv-cache/README.md) · **Unlocks:** production serving.
 
 ## 1 · The wall
 
@@ -54,4 +54,4 @@ batched decode is **token-identical** to per-request.
 - Toggle `RequestScheduler(ragged=True/False)` for a mix of prompt lengths — when do
   mixed-length requests actually share a forward?
 
-**Next:** [18 · Quantization](../18-quantization/) — make the weights small.
+**Next:** [18 · Quantization](../18-quantization/README.md) — make the weights small.

@@ -1,6 +1,6 @@
 # 11 · SFT — learns to behave
 
-**Prereqs:** [09 · Pre-training](../09-pretraining/) · **Unlocks:** [12 · DPO](../12-dpo/).
+**Prereqs:** [09 · Pre-training](../09-pretraining/README.md) · **Unlocks:** [12 · DPO](../12-dpo/README.md).
 
 ## 1 · The wall
 
@@ -48,4 +48,4 @@ uv run baby-whale-v4 sft --help
 - Turn *off* prompt masking (loss on all tokens) — the model wastes capacity learning
   to parrot prompts. Why does that hurt?
 
-**Next:** [12 · DPO](../12-dpo/) — from imitation to preference.
+**Next:** [12 · DPO](../12-dpo/README.md) — from imitation to preference.

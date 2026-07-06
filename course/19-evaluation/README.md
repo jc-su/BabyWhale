@@ -56,4 +56,4 @@ untrained one.
 - Move the needle deeper than the sliding window and re-measure — which attention
   schedule (Module 04) still finds it?
 
-**Next:** [20 · Vision (VL2)](../20-vision-vl2/) — give the model eyes.
+**Next:** [20 · Vision (VL2)](../20-vision-vl2/README.md) — give the model eyes.

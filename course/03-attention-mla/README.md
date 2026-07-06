@@ -4,8 +4,8 @@
 > systems lens, three tracks, and a milestone tie-in — is the template every other
 > module follows.
 
-**Prereqs:** [02 · Attention basics](../02-attention-basics/) (KV, RoPE) ·
-**Unlocks:** [14 · KV cache](../14-kv-cache/) (why the cache is small) → milestone
+**Prereqs:** [02 · Attention basics](../02-attention-basics/README.md) (KV, RoPE) ·
+**Unlocks:** [14 · KV cache](../14-kv-cache/README.md) (why the cache is small) → milestone
 [**E · It serves**](../MILESTONES.md).
 
 ## 1 · The wall
@@ -136,5 +136,5 @@ by guessing.
   cached-latent decode is bit-identical to a full-K/V recompute (a parity test in
   the spirit of `tests/test_mla.py`).
 
-**Next:** [04 · Compressed attention](../04-attention-compressed/) — HCA/CSA, for
+**Next:** [04 · Compressed attention](../04-attention-compressed/README.md) — HCA/CSA, for
 *long-range* reach rather than cache size.

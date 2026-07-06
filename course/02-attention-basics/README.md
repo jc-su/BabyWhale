@@ -1,7 +1,7 @@
 # 02 · Attention basics
 
-**Prereqs:** [01 · Backbone](../01-backbone/) · **Unlocks:** [03 · MLA](../03-attention-mla/),
-[04 · Compressed attention](../04-attention-compressed/).
+**Prereqs:** [01 · Backbone](../01-backbone/README.md) · **Unlocks:** [03 · MLA](../03-attention-mla/README.md),
+[04 · Compressed attention](../04-attention-compressed/README.md).
 
 ## 1 · The wall
 
@@ -73,4 +73,4 @@ uv run python course/02-attention-basics/lab_attention.py   # softmax(q·kᵀ/�
 (The RoPE lab uses the *split-half* rotate convention `[-x2, x1]`; `baby_whale_v4`'s
 `rotate_half` uses the *interleaved* even/odd variant — both are valid RoPE.)
 
-**Next:** [03 · MLA ⭐](../03-attention-mla/) — the cache-memory breakthrough.
+**Next:** [03 · MLA ⭐](../03-attention-mla/README.md) — the cache-memory breakthrough.

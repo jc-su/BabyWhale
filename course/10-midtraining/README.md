@@ -2,7 +2,7 @@
 
 > The phase most tutorials skip entirely.
 
-**Prereqs:** [09 · Pre-training](../09-pretraining/) · **Unlocks:** [11 · SFT](../11-sft/).
+**Prereqs:** [09 · Pre-training](../09-pretraining/README.md) · **Unlocks:** [11 · SFT](../11-sft/README.md).
 
 ## 1 · The wall
 
@@ -56,4 +56,4 @@ and been annealed should retrieve a fact placed far back far better than the raw
 - Extend context but *don't* include long documents in the data — does reach improve?
   (Capability follows data, not just the config number.)
 
-**Next:** [11 · SFT](../11-sft/) — teach it to follow instructions.
+**Next:** [11 · SFT](../11-sft/README.md) — teach it to follow instructions.

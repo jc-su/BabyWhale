@@ -1,6 +1,6 @@
 # 12 · DPO — learns preferences
 
-**Prereqs:** [11 · SFT](../11-sft/) · **Unlocks:** [13 · RL](../13-rl-grpo/).
+**Prereqs:** [11 · SFT](../11-sft/README.md) · **Unlocks:** [13 · RL](../13-rl-grpo/README.md).
 
 ## 1 · The wall
 
@@ -55,4 +55,4 @@ uv run python course/12-dpo/lab_dpo.py
 
 One line, graded against the objective in `baby_whale_v4/training/dpo.py`.
 
-**Next:** [13 · RL with verifiable rewards](../13-rl-grpo/) — when the environment grades you.
+**Next:** [13 · RL with verifiable rewards](../13-rl-grpo/README.md) — when the environment grades you.

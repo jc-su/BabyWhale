@@ -1,7 +1,7 @@
 # 04 · Compressed attention (HCA / CSA)
 
-**Prereqs:** [02 · Attention basics](../02-attention-basics/) · **Unlocks:**
-[10 · Mid-training](../10-midtraining/) (long context).
+**Prereqs:** [02 · Attention basics](../02-attention-basics/README.md) · **Unlocks:**
+[10 · Mid-training](../10-midtraining/README.md) (long context).
 
 ## 1 · The wall
 
@@ -61,4 +61,4 @@ compressed layers can still reach it.
 - Use the `plus-compressed` vs `gpt-minimal` presets (`course/presets.py`) and run the
   needle eval — does reach improve?
 
-**Next:** [05 · Mixture of Experts](../05-moe/) — more capacity without more FLOPs.
+**Next:** [05 · Mixture of Experts](../05-moe/README.md) — more capacity without more FLOPs.

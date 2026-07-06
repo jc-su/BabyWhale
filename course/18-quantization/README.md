@@ -1,6 +1,6 @@
 # 18 · Quantization — gets compressed
 
-**Prereqs:** [01 · Backbone](../01-backbone/) · **Unlocks:** on-device deployment.
+**Prereqs:** [01 · Backbone](../01-backbone/README.md) · **Unlocks:** on-device deployment.
 
 ## 1 · The wall
 
@@ -49,4 +49,4 @@ on size and tokens/sec (`bench-compare`), and check the quality cost with an eva
 
 - Quantize `lm_head` too — watch quality drop. Why is the output projection sensitive?
 
-**Next:** [19 · Evaluation](../19-evaluation/) — how do you *know* any of this worked?
+**Next:** [19 · Evaluation](../19-evaluation/README.md) — how do you *know* any of this worked?

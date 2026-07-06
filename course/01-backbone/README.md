@@ -2,7 +2,7 @@
 
 The skeleton every other module hangs on.
 
-**Prereqs:** [00 · The map](../00-the-map/) · **Unlocks:** the whole stack.
+**Prereqs:** [00 · The map](../00-the-map/README.md) · **Unlocks:** the whole stack.
 
 ## 1 · The wall
 
@@ -67,4 +67,4 @@ uv run python course/01-backbone/lab_rmsnorm.py
 
 The lab docstring walks math → code → *why* (why RMSNorm drops LayerNorm's mean-centering).
 
-**Next:** [02 · Attention basics](../02-attention-basics/) — how a token looks at other tokens.
+**Next:** [02 · Attention basics](../02-attention-basics/README.md) — how a token looks at other tokens.

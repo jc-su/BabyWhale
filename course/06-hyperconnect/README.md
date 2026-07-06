@@ -1,6 +1,6 @@
 # 06 · HyperConnect (mHC)
 
-**Prereqs:** [01 · Backbone](../01-backbone/) · **Unlocks:** richer depth-mixing.
+**Prereqs:** [01 · Backbone](../01-backbone/README.md) · **Unlocks:** richer depth-mixing.
 
 ## 1 · The wall
 
@@ -51,4 +51,4 @@ training run (Module 09) — does the learned multi-branch residual buy any loss
 - Set `hc_mult=1`: you're back to a vanilla residual. Confirm the model still trains.
 - Trace one token's value through `expand → consume → produce → reduce`.
 
-**Next:** [07 · Multi-token prediction](../07-mtp/) — predict more than one token at once.
+**Next:** [07 · Multi-token prediction](../07-mtp/README.md) — predict more than one token at once.

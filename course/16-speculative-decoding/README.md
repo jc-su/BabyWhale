@@ -1,6 +1,6 @@
 # 16 · Speculative decoding
 
-**Prereqs:** [07 · MTP](../07-mtp/), [14 · KV cache](../14-kv-cache/) · **Unlocks:**
+**Prereqs:** [07 · MTP](../07-mtp/README.md), [14 · KV cache](../14-kv-cache/README.md) · **Unlocks:**
 faster serving.
 
 ## 1 · The wall
@@ -63,4 +63,4 @@ uv run python course/16-speculative-decoding/lab_spec_accept.py
 
 The lab shows *why* stopping at the first mismatch makes speculation lossless.
 
-**Next:** [17 · Continuous batching](../17-continuous-batching/) — serve many requests at once.
+**Next:** [17 · Continuous batching](../17-continuous-batching/README.md) — serve many requests at once.

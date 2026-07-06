@@ -39,3 +39,29 @@ jobs:
 
       - name: Unit tests
         run: uv run python -m unittest discover -s tests
+
+  docs:
+    name: docs (mkdocs build + deploy)
+    needs: test
+    # Docs are pure Markdown — no MLX — so a fast Linux runner is fine.
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to push the built site to the gh-pages branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Build the course site (strict — fails on broken links / nav)
+        run: uv run --no-project --with mkdocs-material --python 3.12 mkdocs build --strict
+
+      - name: Deploy to GitHub Pages (gh-pages branch; push to main only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          uv run --no-project --with mkdocs-material --python 3.12 mkdocs gh-deploy --force
