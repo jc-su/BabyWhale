@@ -12,6 +12,7 @@ The learner never sees the reference; they run e.g.::
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable
 
 import mlx.core as mx
@@ -428,3 +429,192 @@ def grade_quantize_dequantize(fn) -> None:
     )
     step = float(mx.max(mx.abs(w))) / (2 ** (4 - 1) - 1)
     assert float(mx.max(mx.abs(deq - w))) <= step * 1.01, "round-trip error within one quant step"
+
+
+# --- Module 04: block mean-pooling (HCA's compression) -----------------------
+# Summarize each full block of keys into one mean vector; drop the trailing
+# partial block. Graded against the REAL `_block_mean_pool` in attention.py.
+
+
+def block_mean_pool_reference(x, block_size):
+    B, H, T, D = x.shape
+    n_full = T // block_size
+    if n_full == 0:
+        return mx.zeros((B, H, 0, D), dtype=x.dtype), 0
+    keep = n_full * block_size
+    pooled = mx.mean(x[:, :, :keep, :].reshape(B, H, n_full, block_size, D), axis=3)
+    return pooled, n_full
+
+
+def grade_block_pool(fn) -> None:
+    from baby_whale_v4.attention import _block_mean_pool
+
+    mx.random.seed(0)
+    x = mx.random.normal((1, 2, 10, 4))  # 10 tokens, blocks of 4 -> 2 full, 2 dropped
+    pooled, n = fn(x, 4)
+    real_pooled, real_n = _block_mean_pool(x, 4)
+    assert n == real_n == 2, "10 tokens / block 4 -> 2 full blocks (trailing partial dropped)"
+    assert bool(mx.allclose(pooled, real_pooled, atol=1e-5)), (
+        "pool = mean over each full block — must match the real _block_mean_pool"
+    )
+    _, n0 = fn(mx.random.normal((1, 2, 3, 4)), 4)
+    assert n0 == 0, "fewer tokens than one block -> zero blocks"
+
+
+# --- Module 10: document packing (mid-training's data mechanic) --------------
+# Concatenate docs as [BOS doc EOS][BOS doc EOS]..., truncate to whole windows.
+# Graded against the REAL PackedDataset.
+
+
+def pack_documents_reference(docs, block_size, bos_id, eos_id):
+    flat: list[int] = []
+    for doc in docs:
+        if not doc:
+            continue
+        flat.append(bos_id)
+        flat.extend(int(t) for t in doc)
+        flat.append(eos_id)
+    usable = (len(flat) - 1) // block_size
+    return flat[: usable * block_size + 1]
+
+
+def grade_pack_documents(fn) -> None:
+    from baby_whale_v4.data.dataset import PackedDataset
+
+    docs = [[5, 6, 7], [8, 9], [10, 11, 12, 13]]
+    real = PackedDataset(documents=docs, block_size=4, bos_id=1, eos_id=2, pad_id=0)
+    real_list = real.packed_tokens.tolist()
+    assert isinstance(real_list, list)
+    flat = fn(docs, 4, 1, 2)
+    assert list(flat) == [int(t) for t in real_list], (
+        "[BOS doc EOS] per doc, then truncate to usable*block_size + 1 — "
+        "must match the real PackedDataset stream"
+    )
+
+
+# --- Module 08: byte-BPE encode -----------------------------------------------
+# Apply learned merges in rank order. Your simple O(n·m) version must produce
+# IDENTICAL tokens to the repo's heap-based O(n·log n) `_bpe_encode` — the same
+# equivalence the repo's own tokenizer test enforces.
+
+
+def bpe_encode_reference(ids, ranks):
+    from baby_whale_v4.data.tokenizer import _BPE_BASE_VOCAB
+
+    tokens = list(ids)
+    while True:
+        best_rank, best_i = None, None
+        for i in range(len(tokens) - 1):
+            rank = ranks.get((tokens[i], tokens[i + 1]))
+            if rank is not None and (best_rank is None or rank < best_rank):
+                best_rank, best_i = rank, i
+        if best_i is None:
+            return tokens
+        assert best_rank is not None  # set together with best_i
+        tokens[best_i : best_i + 2] = [_BPE_BASE_VOCAB + best_rank]
+
+
+def grade_bpe_encode(fn) -> None:
+    from baby_whale_v4.data.tokenizer import _bpe_encode
+
+    ranks = {(104, 105): 0, (259, 33): 1, (97, 98): 2}  # "hi"->259, (hi,"!")->260, "ab"->261
+    for text in (b"hihi!", b"abhi!ab", b"xyz", b""):
+        ids = list(text)
+        got = fn(list(ids), dict(ranks))
+        want = _bpe_encode(list(ids), ranks)
+        assert list(got) == list(want), (
+            f"encode({text!r}) must equal the real _bpe_encode: expected {want}, got {got} — "
+            "apply the LOWEST-rank adjacent pair first, repeatedly"
+        )
+
+
+# --- Module 11: SFT response-only targets ------------------------------------
+# Shift for next-token prediction, then set every non-response target to the
+# ignore index. Graded against the REAL format_chat mask.
+
+
+def sft_targets_reference(ids, mask, ignore_index):
+    return [t if m == 1 else ignore_index for t, m in zip(ids[1:], mask[1:], strict=True)]
+
+
+def grade_sft_targets(fn) -> None:
+    from baby_whale_v4.data import ByteTokenizer
+    from baby_whale_v4.data.chat import Message, format_chat
+
+    tok = ByteTokenizer()
+    ids, mask = format_chat([Message("user", "hi there"), Message("assistant", "hello!")], tok)
+    y = fn(ids, mask, -1)
+    assert len(y) == len(ids) - 1, "targets are the ids shifted by one"
+    ref = sft_targets_reference(ids, mask, -1)
+    assert list(y) == ref, "y[t] = ids[t+1] if mask[t+1] == 1 else ignore_index"
+    assert -1 in ref and any(t != -1 for t in ref), (
+        "sanity: the prompt must be masked AND the response kept"
+    )
+
+
+# --- Module 17: cohort grouping (continuous batching) ------------------------
+# Same-length requests with the same sampling signature share ONE forward — the
+# grouping rule the scheduler ticks on.
+
+
+def form_cohorts_reference(requests):
+    groups: dict[tuple[object, object], list[str]] = {}
+    for rid, length, sig in requests:
+        groups.setdefault((length, sig), []).append(rid)
+    return groups
+
+
+def grade_form_cohorts(fn) -> None:
+    reqs = [("a", 5, "greedy"), ("b", 5, "greedy"), ("c", 7, "greedy"), ("d", 5, "top_k")]
+    got = {key: sorted(members) for key, members in fn(reqs).items()}
+    want = {key: sorted(members) for key, members in form_cohorts_reference(reqs).items()}
+    assert got == want, "group by (length, sampling signature)"
+    assert got[(5, "greedy")] == ["a", "b"], "same length + same sampling -> one cohort"
+    assert got[(7, "greedy")] == ["c"], "different length -> different cohort"
+    assert got[(5, "top_k")] == ["d"], "different sampling -> different cohort"
+
+
+# --- Module 19: bits-per-byte --------------------------------------------------
+# Convert summed next-token loss (nats) into a tokenizer-independent score.
+
+
+def bpb_reference(total_loss_nats, total_tokens, total_bytes):
+    mean_loss_nats = total_loss_nats / total_tokens
+    tokens_per_byte = total_tokens / total_bytes
+    return (mean_loss_nats / math.log(2)) * tokens_per_byte
+
+
+def grade_bpb(fn) -> None:
+    # A model that spreads probability uniformly over 256 byte values scores
+    # exactly 8 bits per byte — the "no compression" baseline.
+    uniform = fn(math.log(256) * 100, 100, 100)
+    assert abs(uniform - 8.0) < 1e-9, "uniform byte model must score exactly 8.0 bpb"
+    assert abs(fn(50.0, 40, 80) - bpb_reference(50.0, 40, 80)) < 1e-9, (
+        "bpb = (nats/token / ln 2) * (tokens/byte)"
+    )
+
+
+# --- Module 20: dynamic tiling grid choice ------------------------------------
+# Pick the (cols, rows) grid that best fits the image. Graded against the REAL
+# plan_tiles.
+
+
+def choose_grid_reference(width, height, tile_size, max_tiles):
+    from baby_whale_v4.vision.tiling import plan_tiles
+
+    plan = plan_tiles(width, height, tile_size=tile_size, max_tiles=max_tiles)
+    return plan.cols, plan.rows
+
+
+def grade_choose_grid(fn) -> None:
+    from baby_whale_v4.vision.tiling import plan_tiles
+
+    cases = [(200, 100, 100, 4), (100, 300, 100, 6), (100, 100, 100, 4), (640, 480, 160, 6)]
+    for width, height, tile_size, max_tiles in cases:
+        cols, rows = fn(width, height, tile_size, max_tiles)
+        plan = plan_tiles(width, height, tile_size=tile_size, max_tiles=max_tiles)
+        assert (cols, rows) == (plan.cols, plan.rows), (
+            f"{width}x{height} (tile {tile_size}, max {max_tiles}): expected "
+            f"{(plan.cols, plan.rows)}, got {(cols, rows)} — must match the real plan_tiles"
+        )
+        assert cols * rows <= max_tiles, "the grid must respect max_tiles"

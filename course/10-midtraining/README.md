@@ -78,4 +78,12 @@ and been annealed should retrieve a fact placed far back far better than the raw
 - Extend context but *don't* include long documents in the data — does reach improve?
   (Capability follows data, not just the config number.)
 
+## 🔨 Build — implement document packing yourself
+
+```bash
+uv run python course/10-midtraining/lab_packing.py
+```
+
+Graded against the real `PackedDataset` stream — the data mechanic behind context extension.
+
 **Next:** [11 · SFT](../11-sft/README.md) — teach it to follow instructions.

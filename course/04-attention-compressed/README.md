@@ -72,4 +72,12 @@ compressed layers can still reach it.
 - Use the `plus-compressed` vs `gpt-minimal` presets (`course/presets.py`) and run the
   needle eval — does reach improve?
 
+## 🔨 Build — implement the block compression yourself
+
+```bash
+uv run python course/04-attention-compressed/lab_block_pool.py
+```
+
+Graded against the real `_block_mean_pool` — HCA's summary step.
+
 **Next:** [05 · Mixture of Experts](../05-moe/README.md) — more capacity without more FLOPs.

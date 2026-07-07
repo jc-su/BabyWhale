@@ -71,4 +71,12 @@ It proves the fast encoder is **output-identical** to the slow reference and enc
 - Encode a long repeated string with a tiny vs large `merges` table — watch tokens/char.
 - Train a tokenizer: `uv run baby-whale-v4 train-tokenizer --help`.
 
+## 🔨 Build — implement BPE encoding yourself
+
+```bash
+uv run python course/08-tokenizer-and-data/lab_bpe.py
+```
+
+Your simple O(n·m) encoder must match the real heap-based `_bpe_encode` token-for-token.
+
 **Next:** [09 · Pre-training](../09-pretraining/README.md) — teach the model to read.

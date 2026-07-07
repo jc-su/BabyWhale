@@ -72,4 +72,12 @@ sequence while `image_features=None` is a perfect no-op.
 - Flip `enable_vision` and diff the `config_hash` — why must it *not* change when off?
 - Change the image's aspect ratio and watch `plan_tiles` pick a different grid.
 
+## 🔨 Build — implement the grid choice yourself
+
+```bash
+uv run python course/20-vision-vl2/lab_tiling.py
+```
+
+Graded against the real `plan_tiles` — minimize padding, tie-break aspect, then tile count.
+
 **Next:** [21 · Capstone](../21-capstone/README.md) — take *your* model through the whole pipeline.

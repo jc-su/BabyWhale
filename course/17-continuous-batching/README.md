@@ -92,4 +92,12 @@ batched decode is **token-identical** to per-request.
 - Toggle `RequestScheduler(ragged=True/False)` for a mix of prompt lengths — when do
   mixed-length requests actually share a forward?
 
+## 🔨 Build — implement the cohort rule yourself
+
+```bash
+uv run python course/17-continuous-batching/lab_cohorts.py
+```
+
+The exact (length, sampling-signature) grouping the scheduler ticks on.
+
 **Next:** [18 · Quantization](../18-quantization/README.md) — make the weights small.

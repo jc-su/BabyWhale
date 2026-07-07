@@ -74,4 +74,12 @@ untrained one.
 - Move the needle deeper than the sliding window and re-measure — which attention
   schedule (Module 04) still finds it?
 
+## 🔨 Build — implement bits-per-byte yourself
+
+```bash
+uv run python course/19-evaluation/lab_bpb.py
+```
+
+Same formula as `eval-bpb`; the grader checks the know-nothing baseline is exactly **8.0**.
+
 **Next:** [20 · Vision (VL2)](../20-vision-vl2/README.md) — give the model eyes.

@@ -20,21 +20,33 @@ from course.ablations import (
 from course.journey import run_journey
 from course.labs import (
     attention_reference,
+    block_mean_pool_reference,
+    bpb_reference,
+    bpe_encode_reference,
+    choose_grid_reference,
     cross_entropy_reference,
     dpo_loss_reference,
+    form_cohorts_reference,
     grade_attention,
+    grade_block_pool,
+    grade_bpb,
+    grade_bpe_encode,
+    grade_choose_grid,
     grade_cross_entropy,
     grade_dpo,
+    grade_form_cohorts,
     grade_group_advantages,
     grade_hc_consume,
     grade_kv_append,
     grade_mla_roundtrip,
     grade_moe_route,
     grade_mtp_head,
+    grade_pack_documents,
     grade_paged_location,
     grade_quantize_dequantize,
     grade_rms_norm,
     grade_rope,
+    grade_sft_targets,
     grade_spec_accept,
     grade_swiglu,
     grade_transformer_layer,
@@ -44,10 +56,12 @@ from course.labs import (
     mla_roundtrip_reference,
     moe_route_reference,
     mtp_head_reference,
+    pack_documents_reference,
     paged_location_reference,
     quantize_dequantize_reference,
     rms_norm_reference,
     rope_reference,
+    sft_targets_reference,
     spec_accept_reference,
     swiglu_reference,
     transformer_layer_reference,
@@ -169,6 +183,27 @@ class TestBuildLabs(unittest.TestCase):
 
     def test_quantize_dequantize(self) -> None:
         grade_quantize_dequantize(quantize_dequantize_reference)
+
+    def test_block_pool(self) -> None:
+        grade_block_pool(block_mean_pool_reference)
+
+    def test_pack_documents(self) -> None:
+        grade_pack_documents(pack_documents_reference)
+
+    def test_sft_targets(self) -> None:
+        grade_sft_targets(sft_targets_reference)
+
+    def test_form_cohorts(self) -> None:
+        grade_form_cohorts(form_cohorts_reference)
+
+    def test_bpb(self) -> None:
+        grade_bpb(bpb_reference)
+
+    def test_choose_grid(self) -> None:
+        grade_choose_grid(choose_grid_reference)
+
+    def test_bpe_encode(self) -> None:
+        grade_bpe_encode(bpe_encode_reference)
 
 
 class TestRunnableAblations(unittest.TestCase):

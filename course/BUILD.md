@@ -43,28 +43,35 @@ step without the components under it).
 | # | Build | Lab |
 |---|-------|-----|
 | 6 | **MLA** low-rank KV | `03-attention-mla/lab_mla.py` |
-| 7 | **MoE top-k routing** | `05-moe/lab_moe_route.py` |
-| 8 | **MTP head** | `07-mtp/lab_mtp.py` |
+| 7 | **Block mean-pool** (HCA's compression) | `04-attention-compressed/lab_block_pool.py` |
+| 8 | **MoE top-k routing** | `05-moe/lab_moe_route.py` |
 | 9 | **HyperConnect** learned stream mix | `06-hyperconnect/lab_hyperconnect.py` |
+| 10 | **MTP head** | `07-mtp/lab_mtp.py` |
 
-### Phase 3 · Training
+### Phase 3 · Data, training & alignment
 | # | Build | Lab |
 |---|-------|-----|
-| 10 | **Cross-entropy** (the pre-training objective) | `09-pretraining/lab_cross_entropy.py` |
-| 11 | **DPO loss** | `12-dpo/lab_dpo.py` |
-| 12 | **GRPO group advantage** | `13-rl-grpo/lab_grpo.py` |
+| 11 | **Byte-BPE encode** (must match the fast real one) | `08-tokenizer-and-data/lab_bpe.py` |
+| 12 | **Cross-entropy** (the pre-training objective) | `09-pretraining/lab_cross_entropy.py` |
+| 13 | **Document packing** (mid-training's data mechanic) | `10-midtraining/lab_packing.py` |
+| 14 | **SFT response-only targets** | `11-sft/lab_sft_mask.py` |
+| 15 | **DPO loss** | `12-dpo/lab_dpo.py` |
+| 16 | **GRPO group advantage** | `13-rl-grpo/lab_grpo.py` |
 
-### Phase 4 · Inference
+### Phase 4 · Inference & serving
 | # | Build | Lab |
 |---|-------|-----|
-| 13 | **KV-cache append** | `14-kv-cache/lab_kv_append.py` |
-| 14 | **Speculative acceptance** | `16-speculative-decoding/lab_spec_accept.py` |
-| 15 | **Paged-KV address translation** | `15-paged-kv-offload/lab_paged_location.py` |
+| 17 | **KV-cache append** | `14-kv-cache/lab_kv_append.py` |
+| 18 | **Paged-KV address translation** | `15-paged-kv-offload/lab_paged_location.py` |
+| 19 | **Speculative acceptance** | `16-speculative-decoding/lab_spec_accept.py` |
+| 20 | **Cohort grouping** (the batching rule) | `17-continuous-batching/lab_cohorts.py` |
 
-### Phase 5 · Efficiency
+### Phase 5 · Efficiency, evaluation & vision
 | # | Build | Lab |
 |---|-------|-----|
-| 16 | **Quantize / dequantize** (absmax) | `18-quantization/lab_quantize.py` |
+| 21 | **Quantize / dequantize** (absmax) | `18-quantization/lab_quantize.py` |
+| 22 | **Bits-per-byte** | `19-evaluation/lab_bpb.py` |
+| 23 | **Dynamic tiling grid** | `20-vision-vl2/lab_tiling.py` |
 
 ## Then: prove it works
 
@@ -74,11 +81,13 @@ you took a model from components you wrote to a thing that actually does the job
 
 ## Honest coverage
 
-16 components have graded build labs today (each checked against the real module or the real
-formula). The remaining modules — compressed attention, mid-training, SFT, continuous
-batching, evaluation, vision — are currently **Read + Extend**. Turning each into a graded build lab is the roadmap, and the mechanism is always
-the same: a grader in `course/labs.py` that compares your implementation to `baby_whale_v4`'s
-real one. **PRs that add a build lab are the most welcome contribution** — see
+**Every content module (01–20) now has at least one graded build lab — 23 in total**, each
+checked against the real module or the real formula. What "build" means varies honestly by
+module: for the architecture you build the *actual component* (weight-shared against the
+real one); for systems modules you build the *core rule* (the block-table translation, the
+cohort key) rather than the whole threaded machinery. Deeper labs — CSA's top-k selection,
+ragged masks, the full serving loop — are the natural next contributions: same mechanism,
+a grader in `course/labs.py` compared to `baby_whale_v4`'s real code. See
 [`CONTRIBUTING-A-MODULE.md`](CONTRIBUTING-A-MODULE.md).
 
 **Start:** [00 · The map](00-the-map/README.md), then work the table above.

@@ -49,8 +49,8 @@ The course **never copies code** — it *narrates and links* the real `file:line
 5. **Break it** — change a knob, re-run, discover the tradeoff yourself
 
 Where there's real math, a **🧩 From theory to code** table bridges the equation to the
-exact code — term by term, with a *why* for each — and a **Build** lab (16 so far — see the
-[Build track](BUILD.md)) has you write it. That pairing is how this course answers *"why
+exact code — term by term, with a *why* for each — and a **Build** lab (**23 — one or more
+in every module**; see the [Build track](BUILD.md)) has you write it. That pairing is how this course answers *"why
 this, and how does the idea become code?"* — a **🧩 From theory to code** table sits in
 **every** module, its
 left column adapting to the feature: an equation, a mechanism, a recipe, a data structure,

@@ -62,4 +62,12 @@ uv run baby-whale-v4 sft --help
 - Turn *off* prompt masking (loss on all tokens) — the model wastes capacity learning
   to parrot prompts. Why does that hurt?
 
+## 🔨 Build — implement response-only targets yourself
+
+```bash
+uv run python course/11-sft/lab_sft_mask.py
+```
+
+Graded against the real `format_chat` mask — your targets must skip exactly the prompt.
+
 **Next:** [12 · DPO](../12-dpo/README.md) — from imitation to preference.
