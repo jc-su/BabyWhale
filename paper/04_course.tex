@@ -1,0 +1,55 @@
+\section{The Course as a Tested Artifact}
+\label{sec:course}
+
+The course layer (\texttt{course/}) contains 22 modules
+(Figure~\ref{fig:lifecycle}), each with the same anatomy.
+
+\paragraph{Five beats.} Every module reads as: \emph{the wall} (what breaks
+without this feature), \emph{the idea} (theory and the paper), \emph{from
+theory to code} (a term-by-term table mapping each piece of the math---or,
+for systems modules, each rule of the mechanism---to the exact operation in
+the source, with a ``why'' per row), \emph{the payoff, measured} (a command
+that prints the number), and \emph{break it} (a knob to turn plus a
+quantitative reflection question). Where an idea is genuinely mathematical the
+table's left column is an equation typeset in \LaTeX{}; where it is a data
+structure or protocol (paged KV, batching) the left column is the rule---the
+bridge is the same.
+
+\paragraph{Three lenses.} Modules are read through modeling/theory,
+training/alignment, and systems lenses. A systems helper prints concrete
+costs for any configuration (parameters, bf16 vs.\ FP4 weight memory, MoE
+active-vs-total experts, attention MACs), so cost arguments are never
+hand-waved.
+
+\paragraph{Three tracks, graded by the test suite.}
+\emph{Read} is the annotated narrative, which pastes the \emph{actual} key
+lines of the implementation. \emph{Build} is a set of 23 fill-in-the-blank
+labs---at least one per module---each a \texttt{NotImplementedError} stub
+whose docstring carries the derivation; running the lab grades the learner's
+code against the real module (e.g., an assembled transformer layer must match
+the library's block output tensor-for-tensor; a simple $O(nm)$ BPE encoder
+must reproduce the library's heap-based encoder token-for-token). The
+project's test suite doubles as the autograder, so correctness cannot be
+faked. \emph{Extend} prompts are open problems that become contributions.
+
+\paragraph{Progressive motivation.} A preset ladder
+(\texttt{gpt-minimal} $\to$ \texttt{+mla} $\to$ \texttt{+compressed} $\to$
+\texttt{+moe-balanced} $\to$ \texttt{+mtp} $\to$ \texttt{full}) turns each
+feature on one at a time, so learners hit the wall a feature removes before
+enabling it.
+
+\paragraph{Milestones.} Passing labs proves understanding of parts; five
+milestones prove the assembled system works on real tasks (\emph{it learns};
+\emph{it remembers}, via a long-context needle probe with per-sample varying
+answers; \emph{it follows}; \emph{it reasons}, via pass@1; \emph{it serves}).
+Two milestones train real (tiny) models inside the test suite and are gated
+on every CI run.
+
+\paragraph{Integrity mechanisms.} Two CI tests keep the course honest:
+(i) a \emph{drift guard} asserts that every identifier shown in a module's
+pasted code still exists in the referenced source file \emph{and} in the
+module page---renaming a function fails CI until the docs are updated; (ii) a
+\emph{coverage guard} asserts that every content module has a guarded snippet
+mapping and at least one graded lab. These mechanisms exist because we needed
+them: auditing our own drafts against the source surfaced eight confidently
+wrong explanations, all caught only by reading the implementation.

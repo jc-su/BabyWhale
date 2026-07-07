@@ -1,0 +1,38 @@
+\section{The Underlying System}
+\label{sec:system}
+
+BabyWhale's library (\texttt{baby\_whale\_v4}, $\sim$14.5K lines of Python
+3.14 on MLX \citep{hannun2023mlx}) is a deliberately readable DeepSeek-style
+stack. It is not a toy re-implementation for the course: it is a tested system
+the course points into.
+
+\paragraph{Architecture.} A pre-norm decoder with a per-layer attention
+schedule mixing sliding-window MQA, \emph{multi-head latent attention} (MLA)
+that caches a low-rank latent instead of K/V \citep{deepseekai2024deepseekv2},
+and two compressed long-range variants (block-mean summaries and NSA-style
+top-$k$ selected blocks \citep{yuan2025nsa}); sparse MoE with hash-routed
+bootstrap layers and DeepSeek-V3's auxiliary-loss-free bias balancing
+\citep{deepseekai2024deepseekv3}; learned multi-branch residual streams
+\citep{zhu2024hyper}; and multi-token-prediction heads that later serve as
+speculative drafts \citep{cai2024medusa,leviathan2023fast}.
+
+\paragraph{Training.} Pre-training with token-weighted gradient accumulation
+and tamper-checked checkpoints; mid-training implemented---instructively---as
+\emph{the same loop on different data}; SFT with response-only losses; DPO
+\citep{rafailov2023direct} with the frozen reference's log-ratios precomputed
+once; and GRPO/RLOO \citep{shao2024deepseekmath,ahmadian2024back} against a
+sandboxed code-execution reward.
+
+\paragraph{Inference.} A KV-cache \texttt{Protocol} with dynamic and paged
+\citep{kwon2023efficient} implementations plus CPU offload; bit-identical
+speculative decoding; and a continuous-batching server in which a single loop
+thread owns the model and cohorts of requests share batched forwards,
+including a ragged mixed-length mode.
+
+\paragraph{Design principles as curriculum.} The library enforces
+fail-fast validation (unknown modes crash rather than fall back), typed
+boundaries, and \emph{tested equivalences}: every ``$X$ is identical to $Y$''
+claim (speculative $\equiv$ greedy; batched $\equiv$ sequential; cached DPO
+$\equiv$ recomputed) is an executable test. A course page
+(\emph{Why built this way}) teaches these decisions explicitly, each
+illustrated by the real code that embodies it.

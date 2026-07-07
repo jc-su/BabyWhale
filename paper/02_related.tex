@@ -1,0 +1,53 @@
+\section{Related Systems}
+\label{sec:related}
+
+Table~\ref{tab:comparison} situates BabyWhale among widely used educational
+resources. nanoGPT \citep{karpathy2022nanogpt} and \citet{raschka2024build}
+teach GPT-style pre-training (the latter adding fine-tuning) with clean,
+runnable code, but stop before the modern architecture and the
+post-training/serving stages. The Annotated Transformer
+\citep{rush2018annotated} and labml.ai \citep{jayasiri2020labml} pioneered
+side-by-side prose-and-code presentation, which we adopt---but their code is
+re-implemented \emph{for} the article, so nothing prevents divergence from any
+maintained system. Spinning Up \citep{achiam2018spinningup} established the
+theory$\to$pseudocode$\to$minimal-code bridge for deep RL; our
+``theory-to-code'' tables generalize this to systems mechanisms (a page table,
+a batching protocol) where the left column is a rule rather than an equation.
+TinyTorch \citep{tinytorch2026} is closest in pedagogy: students build a
+framework under an autograder with real-task milestones. BabyWhale inherits
+its build-and-verify stance but inverts the scope: rather than rebuilding
+tensors and autograd, learners build the \emph{LLM layer}---MLA, routing, DPO,
+speculative acceptance---on top of MLX \citep{hannun2023mlx}, and are graded
+against a maintained, tested production-shaped stack rather than a scaffold.
+
+Two properties are, to our knowledge, unique to BabyWhale: (i) full-lifecycle
+coverage including mid-training, verifiable-reward RL, and a
+continuous-batching server, on one shared codebase; and (ii) CI-enforced
+consistency between the teaching material and the implementation
+(\S\ref{sec:course}).
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+ & \textbf{nanoGPT} & \textbf{Raschka} & \textbf{Annot.\,Tr.\,/\,labml} & \textbf{Spinning Up} & \textbf{TinyTorch} & \textbf{BabyWhale} \\
+\midrule
+Pre-training & \cmark & \cmark & -- & -- & \cmark & \cmark \\
+Mid-training (context/anneal) & -- & -- & -- & -- & -- & \cmark \\
+SFT + preference opt.\ (DPO) & -- & \cmark & -- & -- & -- & \cmark \\
+RL w/ verifiable rewards & -- & -- & -- & \cmark\,(RL) & -- & \cmark \\
+Modern arch.\ (MLA/MoE/MTP) & -- & -- & partial & -- & -- & \cmark \\
+Serving (paged KV, batching, spec.) & -- & -- & -- & -- & KV cache & \cmark \\
+Quantization & -- & -- & -- & -- & \cmark & \cmark \\
+Graded build exercises & -- & -- & -- & exercises & \cmark & \cmark\,(23) \\
+Graded vs.\ \emph{maintained} system & -- & -- & -- & -- & -- & \cmark \\
+Runnable measured payoffs & -- & -- & -- & -- & \cmark & \cmark \\
+CI drift guard on docs & -- & -- & -- & -- & -- & \cmark \\
+\bottomrule
+\end{tabular}
+\caption{Educational LLM/ML systems compared. ``\cmark'' indicates first-class,
+documented support. BabyWhale is the only system covering the full lifecycle
+on one codebase with machine-checked teaching material.}
+\label{tab:comparison}
+\end{table*}

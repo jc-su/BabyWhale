@@ -1,0 +1,55 @@
+\section{Every Claim Is a Command}
+\label{sec:measured}
+
+A recurring failure of educational material is the unmeasured claim (``MLA
+saves memory''). In BabyWhale each module's payoff beat is a runnable script;
+the figures below are plotted from the \emph{same numbers those scripts
+print}, so a reader can reproduce every curve with one command.
+
+\begin{figure}[t]
+  \centering
+  \input{figures/fig_ablations}
+  \caption{\textbf{Two of the six built-in ablations} (values as printed by
+  \texttt{course/.../ablation.py}). \emph{Top:} per-layer attention MACs,
+  full vs.\ a 256-token sliding window ($d{=}512$)---the quadratic/linear
+  split that motivates windowed and compressed attention (Modules 02/04).
+  \emph{Bottom:} token-forwards to generate $n$ tokens with and without a KV
+  cache---the $O(n^2)\!\to\!O(n)$ decode saving (Module 14) reaches
+  $2048\times$ at $n{=}4096$.}
+  \label{fig:ablations}
+\end{figure}
+
+\paragraph{Analytic ablations.} Figure~\ref{fig:ablations} shows two of the
+six: attention cost scaling and the KV-cache decode saving. The others print
+the MLA cache footprint (MHA $2048$\,B vs.\ MLA $256$\,B per token per layer
+at 8 heads $\times$ 128 dims, bf16: $8\times$ smaller at MQA size), MoE's
+decoupling ($8\times$ parameters at $2\times$ FLOPs for 8 experts, top-2),
+expected speculative tokens per verify pass ($4.1\times$ at draft-acceptance
+$p{=}0.9$, $k{=}4$), and bf16$\to$FP4 weight memory ($4\times$).
+
+\begin{figure}[t]
+  \centering
+  \input{figures/fig_loss}
+  \caption{\textbf{The lifecycle actually runs on a laptop.} Training loss of
+  the course's reference pre-training run: a 5.6M-parameter model (2048-token
+  BPE vocabulary) over 15.2M tokens---800 steps in 156\,s on an Apple-Silicon
+  laptop ($\sim$10.5K tok/s, 1.8\,GB peak, bf16). Held-out evaluation loss
+  4.89 (dashed). The same checkpoint then proceeds through mid-training,
+  SFT, DPO, RL, quantization, and serving in the course.}
+  \label{fig:loss}
+\end{figure}
+
+\paragraph{A real end-to-end run.} Figure~\ref{fig:loss} shows the course's
+reference pre-training run, produced by the repository's own CLI on consumer
+hardware. Laptop-scale matters pedagogically: every stage of the lifecycle,
+including the RL loop and the batching server, completes in classroom time,
+so ``break it and re-run'' is a five-minute experiment rather than a cluster
+job. The fast byte-BPE encoder this run depends on is itself a course story:
+the naive encoder stalls on long lines, while the heap-based one packs the
+15.2M-token corpus in 52\,s---and the corresponding lab requires the
+learner's simple encoder to match it token-for-token.
+
+\paragraph{Continuous verification.} All of the above---334 tests, the two
+auto-gated milestones, the drift and coverage guards, and a strict
+documentation build---run in public CI on Apple-Silicon runners; the course
+site is redeployed on every push to \texttt{main}.

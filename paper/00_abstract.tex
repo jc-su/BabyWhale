@@ -1,0 +1,19 @@
+\begin{abstract}
+Educational LLM resources teach one slice of the pipeline: nanoGPT teaches
+pre-training, Spinning Up teaches RL, annotated-paper collections teach
+architecture. No open system walks a learner through the \emph{entire} modern
+lifecycle---architecture, pre-training, mid-training, SFT, preference
+optimization, RL with verifiable rewards, quantization, and serving---on one
+model they can run themselves. We present \textbf{BabyWhale}, an open-source
+(MIT) educational system built on a $\sim$14.5K-line DeepSeek-style stack (MLA,
+MoE with auxiliary-loss-free balancing, multi-token prediction, speculative
+decoding, paged KV, continuous batching) that runs on a laptop via MLX. A
+22-module course follows one checkpoint through the whole lifecycle, and every
+pedagogical claim is machine-checked: 23 build-it-yourself labs are graded
+against the real implementation by the project's own test suite; every
+``payoff'' is a runnable command that prints the number; and pasted code
+excerpts are guarded by CI tests that fail if the documentation drifts from the
+source. The full stack trains a 5.6M-parameter model on 15.2M tokens in
+$\sim$2.5 minutes on an Apple-Silicon laptop, and 334 tests---including the
+course's own integrity checks---run green in public CI.
+\end{abstract}

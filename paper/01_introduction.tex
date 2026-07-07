@@ -1,0 +1,47 @@
+\section{Introduction}
+
+The gap between ``I read the transformer paper'' and ``I understand how a
+modern LLM is actually built, trained, aligned, and served'' has widened
+dramatically. A 2025-era system is not a transformer: it is latent-compressed
+attention over a paged KV cache, sparse experts balanced without auxiliary
+losses, extra prediction heads that double as speculative drafts, a
+preference-optimization and verifiable-reward RL pipeline, and a continuous-%
+batching server---each the subject of its own paper, none of them teachable in
+isolation.
+
+Existing educational resources each cover one leg
+(\S\ref{sec:related}): pre-training \citep{karpathy2022nanogpt,
+raschka2024build}, single-paper architecture \citep{rush2018annotated,
+jayasiri2020labml}, deep RL \citep{achiam2018spinningup}, or ML-systems
+foundations \citep{tinytorch2026}. A learner who wants the \emph{connected}
+story---why mid-training exists, how MTP heads become a serving speedup, why
+the KV cache dictates attention design---must stitch it together from a dozen
+sources with incompatible codebases.
+
+BabyWhale closes this gap with one design decision: \textbf{a single tiny
+model's biography is the curriculum} (Figure~\ref{fig:lifecycle}). The same
+checkpoint is born (architecture), learns to read (pre-training), specializes
+(mid-training), learns to behave (SFT, DPO), learns to reason (GRPO with a
+code sandbox), is compressed (FP4), goes to work (paged KV, speculative
+decoding, continuous batching), and is judged (bits-per-byte, pass@1,
+long-context retrieval)---all on a laptop, in minutes per stage.
+
+Our second contribution addresses a failure mode we measured in ourselves:
+\textbf{educational prose drifts from code}. While auditing our own drafts
+against the implementation we found and fixed eight confidently wrong
+explanations (a mis-stated gating function, a wrong loss attribution, an
+inverted masking claim). BabyWhale therefore treats pedagogy as a tested
+artifact: labs are graded against the real modules, pasted snippets are
+CI-checked against the source, and every quantitative claim is a command the
+reader can run (\S\ref{sec:course}, \S\ref{sec:measured}).
+
+\begin{figure*}[t]
+  \centering
+  \input{figures/fig_lifecycle}
+  \caption{\textbf{BabyWhale in one view.} \emph{Top:} the course is one
+  model's lifecycle; each stage names its course modules. \emph{Bottom:} every
+  module has the same anatomy---five narrative beats read through three
+  lenses, three participation tracks, and two CI-enforced integrity
+  mechanisms that keep the teaching aligned with the code.}
+  \label{fig:lifecycle}
+\end{figure*}

@@ -1,0 +1,34 @@
+\section{Demonstration}
+\label{sec:demo}
+
+The booth demo is a 10-minute arc through one module, mirroring how the
+course is used.
+
+\paragraph{(1) The whole lifecycle in 30 seconds.} We run
+\texttt{course/00-the-map/journey.py}: a tiny model is built, trained on a
+toy corpus, and sampled---loss falls from $\sim$6.0 to $\sim$2.5 live. This
+frames everything else: the rest of the course makes each leg of the loop
+\emph{good}.
+
+\paragraph{(2) Read a module.} On the rendered site we open Module 03 (MLA):
+the wall (KV memory), the theory-to-code table (each term of
+$c = xW_{DKV}$, cache $c$, $K,V = \mathrm{split}(cW_{UKV})$ mapped to the
+exact lines in \texttt{attention.py}), and the pasted, drift-guarded source.
+
+\paragraph{(3) Build it.} The visitor solves
+\texttt{lab\_mla.py}---two matmuls---and watches the grader compare their
+latent round-trip against the real module: \texttt{PASS} on success, a
+targeted assertion message on failure. For skeptical visitors we rename a
+function in \texttt{attention.py} and run the drift guard to show the
+documentation fail loudly.
+
+\paragraph{(4) Measure and break it.} We run the module's ablation (the
+$8\times$ cache table), then halve \texttt{kv\_lora\_rank} in a preset and
+re-run---the number moves, the tradeoff is felt. Finally we start the
+continuous-batching server, submit two concurrent chat requests, and show the
+short one finishing first while both stream.
+
+\paragraph{Availability.} Code, course, and CI are public under MIT:
+\url{https://github.com/jc-su/BabyWhale} (rendered course:
+\url{https://jc-su.github.io/BabyWhale}). Requirements: an Apple-Silicon Mac
+(MLX) and Python 3.14; every demo step above also runs in the project's CI.

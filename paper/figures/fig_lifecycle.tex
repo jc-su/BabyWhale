@@ -1,0 +1,40 @@
+% Figure 1: lifecycle spine + module anatomy (TikZ)
+\begin{tikzpicture}[
+  font=\small,
+  stage/.style={draw, rounded corners=2pt, align=center, minimum height=9mm,
+                minimum width=27mm, inner sep=2pt, fill=blue!6},
+  anat/.style={draw, rounded corners=2pt, align=left, inner sep=4pt, fill=gray!8},
+  arr/.style={-{Stealth[length=2mm]}, thick}
+]
+% --- top row -----------------------------------------------------------
+\node[stage] (born)  {\textbf{born}\\ \scriptsize arch.\ 01--07};
+\node[stage, right=4mm of born]  (read)  {\textbf{learns to read}\\ \scriptsize pre-train 08--09};
+\node[stage, right=4mm of read]  (spec)  {\textbf{specializes}\\ \scriptsize mid-train 10};
+\node[stage, right=4mm of spec]  (beh)   {\textbf{learns to behave}\\ \scriptsize SFT/DPO 11--12};
+% --- bottom row (right to left) ----------------------------------------
+\node[stage, below=5mm of beh]   (reas)  {\textbf{learns to reason}\\ \scriptsize RL 13};
+\node[stage, left=4mm of reas]   (comp)  {\textbf{gets compressed}\\ \scriptsize quant.\ 18};
+\node[stage, left=4mm of comp]   (work)  {\textbf{goes to work}\\ \scriptsize serving 14--17};
+\node[stage, left=4mm of work]   (judge) {\textbf{is judged}\\ \scriptsize eval 19};
+% --- arrows ------------------------------------------------------------
+\draw[arr] (born) -- (read);
+\draw[arr] (read) -- (spec);
+\draw[arr] (spec) -- (beh);
+\draw[arr] (beh)  -- (reas);
+\draw[arr] (reas) -- (comp);
+\draw[arr] (comp) -- (work);
+\draw[arr] (work) -- (judge);
+\node[left=2.5mm of born, align=center, font=\footnotesize]
+  (ckpt) {\emph{one}\\ \emph{checkpoint}};
+\draw[arr, dashed] (ckpt) -- (born);
+% --- anatomy strip ------------------------------------------------------
+\node[anat, below=5mm of judge.south west, anchor=north west, text width=46mm]
+  (beats) {\textbf{5 beats / module}\\[1pt] \scriptsize
+  wall $\to$ idea $\to$ \emph{theory-to-code} table $\to$ measured payoff $\to$ break it};
+\node[anat, right=4mm of beats.north east, anchor=north west, text width=44mm]
+  (tracks) {\textbf{3 tracks}\\[1pt] \scriptsize
+  Read (real code shown) \\ Build (23 labs, graded vs.\ real modules) \\ Extend (open PRs)};
+\node[anat, right=4mm of tracks.north east, anchor=north west, text width=46mm]
+  (guards) {\textbf{CI integrity}\\[1pt] \scriptsize
+  drift guard: shown code $\equiv$ source \\ milestones: real-task gates \\ 334 tests, Apple-Silicon CI};
+\end{tikzpicture}

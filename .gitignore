@@ -21,3 +21,13 @@ runs/
 
 # Local session / caveat dumps.
 2026-*.txt
+
+# LaTeX build artifacts (paper/ sources are committed; main.pdf is covered by *.pdf).
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
