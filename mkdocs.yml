@@ -25,7 +25,11 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.highlight
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.arithmatex:
       generic: true
 
@@ -36,6 +40,7 @@ extra_javascript:
 nav:
   - Home: README.md
   - Build the LLM: BUILD.md
+  - Why built this way: DESIGN.md
   - Milestones: MILESTONES.md
   - Part 0 · The map:
       - 00 · The map: 00-the-map/README.md

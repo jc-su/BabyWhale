@@ -36,6 +36,23 @@ stays bit-identical when `enable_vision=False`).
 
 ## 3 · In the code
 
+The integration point (`model.py`, `_prepend_vision`) — image features become a token prefix:
+
+```python
+vis = connector(image_features)                     # [B, n_vis, n_embd] — now token-shaped
+combined = mx.concatenate([vis, x], axis=1)         # image tokens FIRST, then text
+pad_ids = mx.zeros((input_ids.shape[0], vis.shape[1]), dtype=input_ids.dtype)
+block_ids = mx.concatenate([pad_ids, input_ids], axis=1)   # placeholder ids for MoE routing
+```
+
+And the connector itself (`vision/connector.py`) is a two-layer `WhaleLinear` MLP:
+
+```python
+hidden = nn.gelu(self.fc1(features))    # vision_dim -> n_embd
+return self.fc2(hidden)                 # n_embd -> n_embd
+```
+
+
 - `baby_whale_v4/vision/tiling.py` — `plan_tiles` (grid that minimizes padding + thumbnail).
 - `baby_whale_v4/vision/connector.py` — `VisionMLPConnector` (`vision_dim → n_embd`).
 - `baby_whale_v4/model.py` — `_prepend_vision` puts image tokens first (placeholder ids

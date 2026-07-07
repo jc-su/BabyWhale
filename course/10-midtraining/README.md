@@ -39,6 +39,28 @@ downstream stage better. Measured with the needle eval (Module 19).
 
 ## 3 · In the code
 
+The honest punchline — mid-training **is** pre-training on a different diet, and the code
+says so literally (`training/midtrain.py`):
+
+```python
+def midtrain(*, config, midtrain_config, train_dataset, out_dir, ...):
+    return pretrain(                     # the SAME loop —
+        config=config,
+        pretrain_config=PretrainConfig(  # — different lr/steps/warmup...
+            lr=midtrain_config.lr,
+            max_steps=midtrain_config.max_steps,
+            warmup_steps=midtrain_config.warmup_steps,
+            ...
+        ),
+        train_dataset=train_dataset,     # ...and, crucially, DIFFERENT DATA
+        ...
+    )
+```
+
+Everything that makes it "mid-training" is the *inputs*: longer-context data, curated
+mixes, code/math oversampling — not a new algorithm.
+
+
 - `uv run baby-whale-v4 midtrain --help` — the mid-training entry point.
 - The context curriculum lives in the training/config plumbing; the payoff is measured
   with the long-context probe in `baby_whale_v4/eval/needle.py`.

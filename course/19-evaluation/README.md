@@ -32,6 +32,24 @@ Why bits-per-byte, not perplexity? perplexity depends on the tokenizer; normaliz
 
 ## 3 · In the code
 
+Bits-per-byte (`cli/eval.py`) — nats → bits, normalized by *bytes* so tokenizers can't game it:
+
+```python
+mean_loss_nats = total_loss_nats / total_tokens_in_loss
+bpb = (mean_loss_nats / math.log(2)) * tokens_per_byte
+```
+
+And the needle probe (`eval/needle.py`) — per-sample *random* answers force retrieval:
+
+```python
+x = rng.integers(low, vocab_size, size=(n_samples, seq_len), dtype=np.int32)  # filler
+answers = rng.integers(low, vocab_size, size=(n_samples,), dtype=np.int32)   # varies!
+x[i, pos] = marker_id; x[i, pos + 1] = int(answers[i])   # plant marker+answer mid-sequence
+x[i, seq_len - 1] = marker_id                            # query marker at the end
+preds = mx.argmax(final_logits, axis=-1)                 # can it recall the answer?
+```
+
+
 - `baby_whale_v4/cli/eval.py` — `eval-bpb`, `eval-code`, `eval-ifeval`, `eval-dpo`,
   `eval-rl-health`.
 - `baby_whale_v4/eval/needle.py` — `evaluate_needle_retrieval` (per-sample varying

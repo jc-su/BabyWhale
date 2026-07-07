@@ -30,6 +30,27 @@ batched forward — so verification costs one pass regardless of k. That's the s
 
 ## 3 · In the code
 
+Draft → verify → accept (`model.py`, `spec_decode`):
+
+```python
+main_draft = mx.argmax(self.lm_head(last_h), axis=-1).reshape(1, 1)
+for k in range(m):                                       # MTP heads draft t+2, t+3, ...
+    drafts.append(mx.argmax(self.mtp[f"head_{k}"](last_h), axis=-1).reshape(1, 1))
+
+extended = mx.concatenate([seq, draft_seq], axis=1)
+out2 = self(extended)                                    # ONE forward verifies all drafts
+verify_logits = out2.logits[:, seq.shape[1] : seq.shape[1] + m, :]
+
+for k in range(m):
+    verified = mx.argmax(verify_logits[:, k, :], axis=-1).reshape(1, 1)
+    if bool(mx.array_equal(verified, drafts[k + 1])):    # matches greedy?
+        accepted.append(drafts[k + 1])                   # keep it
+        n_drafts_accepted += 1
+    else:
+        break                                            # first miss -> stop (lossless)
+```
+
+
 - `baby_whale_v4/model.py` — `spec_decode(...)` returns a `SpecDecodeResult` whose
   `acceptance_rate = drafts_accepted / drafts_proposed`.
 - Requires `mtp_heads > 0` (the `plus-mtp` / `full` presets).

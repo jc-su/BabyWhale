@@ -31,6 +31,22 @@ group std, RLOO leaves each sample out — so neither needs a separate learned v
 
 ## 3 · In the code
 
+The GRPO loss (`training/grpo.py`) — group-normalize, weight the log-probs, keep a KL leash:
+
+```python
+advantages = (rewards - mx.mean(rewards)) / (_std(rewards) + 1e-6)   # the group IS the baseline
+
+out = model(full)                                     # one forward for the whole group
+log_pi = mx.take_along_axis(_log_softmax(pi_logits), samples[:, :, None], axis=-1)
+
+kl = _kl_per_token(pi_logits, ref_logits)             # don't drift from the reference
+policy_loss = -mx.mean(advantages[:, None] * log_pi)  # push toward above-average rollouts
+return policy_loss + beta_kl * mx.mean(kl)
+```
+
+RLOO differs in exactly one line (`training/rloo.py`): `A_i = r_i - mean(r_{j≠i})`.
+
+
 - `baby_whale_v4/training/rloo.py` and `baby_whale_v4/rl/` — the GRPO/RLOO update.
 - The **code sandbox** reward + end-to-end loop are exercised by
   `tests/test_code_agent.py` (`TestCodeGRPOEndToEnd`, `TestCodeRewardEndToEnd`).

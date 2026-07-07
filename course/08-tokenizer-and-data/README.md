@@ -33,6 +33,22 @@ O(len × merges) and *hangs* on long lines; this is O(len · log len).
 
 ## 3 · In the code
 
+The heap-encode inner loop (`data/tokenizer.py`, `_bpe_encode`) — pop the best merge,
+splice the linked list, requeue the two new neighbor pairs:
+
+```python
+rank, i = heapq.heappop(heap)              # cheapest (earliest-learned) merge first
+j = nxt[i]
+if not alive[i] or j >= n or not alive[j]: # stale heap entry — skip
+    continue
+if ranks.get((tokens[i], tokens[j])) != rank:
+    continue                               # pair changed since queued — skip
+tokens[i] = _BPE_BASE_VOCAB + rank         # merge in place
+alive[j] = False                           # right partner dies
+nxt[i] = nxt[j]                            # O(1) splice — no list rebuild
+```
+
+
 - `baby_whale_v4/data/tokenizer.py` — `class ByteBPETokenizer`; `_bpe_encode` is the
   heap-based encoder (contrast the slow reference in `tests/test_bpe_tokenizer.py`).
 - `baby_whale_v4/data/packing.py` — concatenate + window into training tensors.

@@ -34,6 +34,23 @@ let it grow lazily and pack many requests tightly.
 
 ## 3 · In the code
 
+The write path (`inference/paged_kv.py`, `append_tokens`) — walk tokens through the block
+table, allocating on boundary crossings:
+
+```python
+for t in range(T):
+    block_pos = pos // cfg.block_size         # which LOGICAL block
+    offset = pos % cfg.block_size             # where inside it
+    if block_pos >= len(table.blocks):
+        table.blocks.append(self.allocate())  # cross a boundary -> grab a block
+    block_idx = table.blocks[block_pos]       # logical -> PHYSICAL
+    # keys[block_idx, :, offset, :] = keys_in[0, :, t, :]
+```
+
+The block map is shared across layers — a block allocated at layer 0 is reused by layers
+1..n at the same `(block, offset)`.
+
+
 - `baby_whale_v4/inference/paged_kv.py` — `class PagedKVCache` (block map shared across
   layers + per-layer lengths; `from_model_config`).
 - KV **offload** moves blocks to/from CPU (`tests/test_paged_engine_offload.py`).

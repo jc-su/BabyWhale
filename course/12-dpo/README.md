@@ -30,6 +30,25 @@ and loses fluency while chasing the preference signal.
 
 ## 3 · In the code
 
+The whole loss (`training/dpo.py`, `_dpo_pair_loss`) — with the frozen reference's
+log-ratio passed in *precomputed*:
+
+```python
+pi_chosen = _logp_response(model, prompt, chosen, chosen_mask)
+pi_rejected = _logp_response(model, prompt, rejected, rejected_mask)
+pi_logratio = pi_chosen - pi_rejected
+logits = beta * (pi_logratio - ref_logratio)     # ref_logratio: computed ONCE, frozen
+return -mx.mean(_log_sigmoid(logits))
+```
+
+```python
+# _precompute_ref_logratios — why recompute a frozen model every step?
+ref_chosen = _logp_response(ref, ex.prompt[None, :], ex.chosen[None, :])
+ref_rejected = _logp_response(ref, ex.prompt[None, :], ex.rejected[None, :])
+ratios.append(ref_chosen - ref_rejected)         # constant across training
+```
+
+
 - `baby_whale_v4/training/dpo.py` — `dpo_loss` / `_dpo_pair_loss` (the β-scaled
   log-ratio of policy-vs-reference), and `_precompute_ref_logratios` (the caching).
 

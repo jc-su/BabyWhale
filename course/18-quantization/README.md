@@ -28,6 +28,25 @@ via `WhaleLinear`'s `placement`, while the bulk (the experts) goes to 4-bit.
 
 ## 3 · In the code
 
+Every linear picks its path by *resolved* mode (`layers.py`, `WhaleLinear.__call__`) — and
+the resolution is where placement policy bites:
+
+```python
+self.quant_mode = quant_mode_for_placement(quant_mode, placement)  # policy decides per layer
+
+match self.quant_mode:
+    case "none":
+        y = self.inner(x)                             # plain matmul
+    case "int8-weight" | "int4-weight":
+        y = self._affine_matmul(x, _AFFINE_BITS[self.quant_mode])   # real quantized matmul
+    case "fp4-native":
+        packed = self._packed_fp4_weight()            # cached 4-bit packing
+        y = linear_mlx_fp4(x, packed, self.bias, dtype=x.dtype)
+    case _:
+        assert_never(self.quant_mode)                 # fail-fast: no silent fallback
+```
+
+
 - `baby_whale_v4/quantization/` and `baby_whale_v4/mlx_fp4/` — the FP4 matmul + policy.
 - `baby_whale_v4/layers.py` — `WhaleLinear` carries a `placement` so the policy applies;
   config `quant_mode` selects the scheme.

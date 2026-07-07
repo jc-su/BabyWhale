@@ -27,6 +27,20 @@ wasted signal that dilutes instruction-following.
 
 ## 3 · In the code
 
+The masking is done in the *data*, not the loss (`data/chat.py`) — prompt positions get
+target `-1`, which `cross_entropy_ignore` skips:
+
+```python
+ids, mask = format_chat(ex.messages, self.tokenizer)   # mask=1 on response tokens only
+x = mx.array(ids[:-1], dtype=mx.int32)
+y = mx.array(ids[1:], dtype=mx.int32)
+mask_y = mx.array(mask[1:], dtype=mx.int32)
+y = mx.where(mask_y == 0, mx.full(y.shape, -1, dtype=mx.int32), y)   # prompt -> ignore
+```
+
+The SFT loop itself (`training/sft.py`) is then just supervised training on `(x, y)`.
+
+
 - `baby_whale_v4/training/sft.py` — the SFT loop and response-only loss masking.
 - `baby_whale_v4/data/chat.py` — `render_chat_prompt` (turns messages into the templated
   token stream the model and server agree on).

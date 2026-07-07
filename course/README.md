@@ -18,6 +18,10 @@ not a claim.
 > **Want to build it, not just read it?** → the **[Build track](BUILD.md)**: implement each
 > real component yourself — graded against the *actual* module — then assemble a working
 > model and prove it on a real task, TinyTorch-style.
+>
+> **Wondering why the code looks the way it does?** → **[Why built this way](DESIGN.md)**:
+> the engineering decisions (fail-fast, typed boundaries, tested equivalences…) — each with
+> the real code that embodies it.
 
 ## How each module works — three tracks
 

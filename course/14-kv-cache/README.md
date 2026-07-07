@@ -31,6 +31,22 @@ append — no earlier token's K/V is ever recomputed.
 
 ## 3 · In the code
 
+The whole mechanism (`cache.py`, `DynamicKVCache.append`) — one concatenate on the time axis:
+
+```python
+old_key = self.keys[layer_idx]
+if old_key is None:
+    new_key = key                                       # first chunk: just store
+else:
+    new_key = mx.concatenate([old_key, key], axis=2)    # append on T: [B, H, T+·, D]
+    new_value = mx.concatenate([old_value, value], axis=2)
+self.keys[layer_idx] = new_key
+return new_key, new_value                               # attention reads the full past
+```
+
+Attention then runs over `new_key`/`new_value` — no past K/V is ever recomputed.
+
+
 - `baby_whale_v4/cache.py` — `KVCache` (the Protocol) and `DynamicKVCache` (append K/V,
   `sequence_length`); MLA layers instead store latents (`append_latent`, Module 03).
 - `baby_whale_v4/inference/prefix_cache.py` — reuse a shared prompt prefix.

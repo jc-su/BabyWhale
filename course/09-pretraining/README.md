@@ -31,6 +31,27 @@ count more in the mean loss — otherwise short sequences get over-weighted.
 
 ## 3 · In the code
 
+The step (`training/pretrain.py`) — accumulate, clip, update:
+
+```python
+loss, grads = _accumulated_loss_and_grads(..., accum=pretrain_config.grad_accum)
+grads = clip_grad_norm(grads, pretrain_config.grad_clip)   # bound the step size
+model.update(optimizer.step(model.parameters(), grads))    # AdamW: m̂/(√v̂+ε) + decay
+tokens_seen += _target_token_count(y)                      # count TOKENS, not batches
+```
+
+And the AdamW inner update (`training/mlx_optim.py`):
+
+```python
+m = b1 * m + (1.0 - b1) * grad                 # momentum
+v = b2 * v + (1.0 - b2) * mx.square(grad)      # second moment
+m_hat = m / (1.0 - b1**self.state.step)        # bias correction
+v_hat = v / (1.0 - b2**self.state.step)
+decayed = param * (1.0 - lr * self.weight_decay)           # DECOUPLED weight decay
+updates.append((path, decayed - lr * m_hat / (mx.sqrt(v_hat) + self.eps)))
+```
+
+
 - `baby_whale_v4/training/pretrain.py` — the loop (accumulation, schedule, metrics).
 - `baby_whale_v4/training/mlx_optim.py` — `class AdamW` (`step(params, grads)`).
 - `baby_whale_v4/training/checkpoint.py` — `.bw4` save/load with a config hash and

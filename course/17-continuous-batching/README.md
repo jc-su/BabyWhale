@@ -34,6 +34,44 @@ model loop" — correctness (no races) *and* throughput (batched forwards) at on
 
 ## 3 · In the code
 
+The loop that owns the model (`inference/serving.py`, `BatchingServer._loop`):
+
+```python
+while self._running:
+    self._drain_control()                    # weight-sync etc. — exclusive model access
+    drained = self._drain_pending()          # admit newly-submitted requests
+    if self._scheduler.has_work():
+        self._scheduler.tick()               # ONE tick: prefill chunk + batched decode
+        for handle in self._tracked:
+            handle._pump()                   # push fresh tokens to the waiting client
+            if handle.state.finished:
+                handle._finish()
+    else:
+        self._wake.wait(timeout=self._idle_timeout)   # idle — sleep until submit()
+```
+
+Handler threads only ever touch `submit()` and their own `RequestHandle` — never the model:
+
+```mermaid
+sequenceDiagram
+    participant C1 as client A
+    participant C2 as client B
+    participant H as handler threads
+    participant Q as pending queue
+    participant L as loop thread (owns model)
+    C1->>H: POST /v1/chat/completions
+    C2->>H: POST /v1/chat/completions
+    H->>Q: submit(prompt, opts) → RequestHandle
+    loop every tick
+        L->>Q: drain pending
+        L->>L: scheduler.tick()  (prefill chunk + ONE batched decode)
+        L-->>H: handle._pump() — new tokens
+    end
+    H-->>C1: SSE stream (tokens as they land)
+    H-->>C2: SSE stream (interleaved — no head-of-line block)
+```
+
+
 - `baby_whale_v4/inference/serving.py` — `class BatchingServer` (the loop, `RequestHandle`,
   `cancel()`).
 - `baby_whale_v4/inference/scheduler.py` — cohorting; `ragged=True` for mixed lengths.

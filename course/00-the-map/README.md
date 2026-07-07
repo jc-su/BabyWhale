@@ -19,7 +19,18 @@ into a useful, served system. Every module in this course is one leg of it:
 | **Is judged** | Evaluation — the honesty check, used throughout | 19 |
 
 The trick to not getting lost: **it's always the same model.** You'll watch *one*
-tiny checkpoint go all the way through.
+tiny checkpoint go all the way through:
+
+```mermaid
+flowchart LR
+    A["🐣 born<br/>(01–07 architecture)"] --> B["📖 learns to read<br/>(08–09 pre-train)"]
+    B --> C["🎯 specializes<br/>(10 mid-train)"]
+    C --> D["🤝 learns to behave<br/>(11 SFT · 12 DPO)"]
+    D --> E["🧮 learns to reason<br/>(13 RL, verifiable)"]
+    E --> F["📦 gets compressed<br/>(18 quantization)"]
+    F --> G["🚀 goes to work<br/>(14–17 serving)"]
+    G --> H["⚖️ is judged<br/>(19 eval — used throughout)"]
+```
 
 ## Run the whole lifecycle in 30 seconds
 
