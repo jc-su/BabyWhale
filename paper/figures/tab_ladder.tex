@@ -1,0 +1,26 @@
+% Table: the preset ladder, actually trained (paper/experiments/run_experiments.py).
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Preset} & \textbf{Params} & \textbf{CE loss} & \textbf{Train tok/s} \\
+\midrule
+\texttt{gpt-minimal}        & 566{,}864 & 2.364 & 22{,}669 \\
+\;\texttt{+mla}             & 587{,}344 & 2.365 & 22{,}955 \\
+\;\texttt{+compressed}      & 577{,}360 & 2.396 & 22{,}615 \\
+\;\texttt{+moe-balanced}    & 577{,}360 & 2.404 & 22{,}147 \\
+\;\texttt{+mtp}             & 618{,}320 & 2.400 & 24{,}010 \\
+\texttt{full} (+mHC)        & 618{,}640 & 2.365 & 17{,}821 \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{The course's preset ladder, actually trained} (240 steps,
+identical data/optimizer; byte-level LM on the course's own Markdown; Apple
+M-series laptop; \texttt{paper/experiments/run\_experiments.py}). At this toy
+scale every rung reaches statistically indistinguishable language-model loss
+while its parameter and throughput costs are plainly visible---which is
+precisely the course's lesson: these features are load-bearing for
+\emph{capabilities and serving} (KV memory, long context, decode throughput),
+not for tiny-scale perplexity, and each module measures them where they bite.}
+\label{tab:ladder}
+\end{table}

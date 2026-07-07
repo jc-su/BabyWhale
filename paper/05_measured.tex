@@ -39,6 +39,22 @@ $p{=}0.9$, $k{=}4$), and bf16$\to$FP4 weight memory ($4\times$).
   \label{fig:loss}
 \end{figure}
 
+\input{figures/tab_ladder}
+\input{figures/tab_audit}
+
+\paragraph{The preset ladder, trained.} Beyond analytic ablations, the paper
+ships a one-command experiment script
+(\texttt{paper/experiments/run\_experiments.py}) that regenerates every
+measured number below on the reader's own machine. Table~\ref{tab:ladder}
+trains all six presets of the course's motivation ladder under identical
+conditions: the architecture features cost parameters and decode-relevant
+structure while leaving toy-scale LM loss essentially unchanged---evidence
+for the course's framing that their value must be (and is) measured in
+capabilities and serving rather than perplexity. The same script measures
+cohort batching end-to-end on the laptop: aggregate decode throughput rises
+from 316 to 546, 810, and 1{,}389 tok/s for cohorts of 1, 2, 4, and 8
+($4.4\times$)---the number Module~17's ``payoff'' beat promises.
+
 \paragraph{A real end-to-end run.} Figure~\ref{fig:loss} shows the course's
 reference pre-training run, produced by the repository's own CLI on consumer
 hardware. Laptop-scale matters pedagogically: every stage of the lifecycle,
@@ -57,9 +73,8 @@ two milestones that train real models inside the suite, the drift and
 coverage guards, and a strict documentation build; the course site redeploys
 on every push. \emph{(ii) A quantified content audit:} we line-audited all 20
 theory-to-code bridges against the implementation and found \textbf{8
-inaccuracies} (e.g., a mis-stated router gating function, a
-GRPO-vs-RLOO loss attribution)---all corrected, and the classes of error that
-recurred are exactly what the CI guards now prevent. \emph{(iii)
+inaccuracies}, taxonomized in Table~\ref{tab:audit}---all corrected, and the
+error classes directly shaped the integrity mechanisms. \emph{(iii)
 Reproducibility:} CI performs a from-scratch environment sync and full run on
 every commit, i.e., a continuous clean-machine installation test. We have not
 yet run a controlled human learning study; this is the main open evaluation
