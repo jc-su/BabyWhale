@@ -49,7 +49,18 @@ the naive encoder stalls on long lines, while the heap-based one packs the
 15.2M-token corpus in 52\,s---and the corresponding lab requires the
 learner's simple encoder to match it token-for-token.
 
-\paragraph{Continuous verification.} All of the above---334 tests, the two
-auto-gated milestones, the drift and coverage guards, and a strict
-documentation build---run in public CI on Apple-Silicon runners; the course
-site is redeployed on every push to \texttt{main}.
+\paragraph{How the system was evaluated.} Three ways, all mechanical and
+reproducible. \emph{(i) Artifact verification:} 334 tests run green in public
+CI on Apple-Silicon runners, including one grader per lab (each proven to
+accept the reference solution \emph{and} reject a representative wrong one),
+two milestones that train real models inside the suite, the drift and
+coverage guards, and a strict documentation build; the course site redeploys
+on every push. \emph{(ii) A quantified content audit:} we line-audited all 20
+theory-to-code bridges against the implementation and found \textbf{8
+inaccuracies} (e.g., a mis-stated router gating function, a
+GRPO-vs-RLOO loss attribution)---all corrected, and the classes of error that
+recurred are exactly what the CI guards now prevent. \emph{(iii)
+Reproducibility:} CI performs a from-scratch environment sync and full run on
+every commit, i.e., a continuous clean-machine installation test. We have not
+yet run a controlled human learning study; this is the main open evaluation
+(\S\emph{Limitations}).

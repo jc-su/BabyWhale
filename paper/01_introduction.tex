@@ -26,6 +26,16 @@ code sandbox), is compressed (FP4), goes to work (paged KV, speculative
 decoding, continuous batching), and is judged (bits-per-byte, pass@1,
 long-context retrieval)---all on a laptop, in minutes per stage.
 
+\paragraph{Target audience and impact.} BabyWhale serves three groups:
+(i)~\emph{self-learners and graduate students} who know basic deep learning
+and want the modern LLM stack end-to-end rather than in slices;
+(ii)~\emph{instructors}, since each module is self-contained and its labs
+autograde with a plain \texttt{python} invocation---no grading
+infrastructure; and (iii)~\emph{research engineers onboarding onto LLM
+systems}, for whom the measured ablations double as a systems-intuition
+reference. Because everything runs in classroom time on a laptop, the
+barrier to adoption is one machine, not a cluster.
+
 Our second contribution addresses a failure mode we measured in ourselves:
 \textbf{educational prose drifts from code}. While auditing our own drafts
 against the implementation we found and fixed eight confidently wrong

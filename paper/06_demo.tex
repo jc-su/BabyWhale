@@ -17,10 +17,31 @@ exact lines in \texttt{attention.py}), and the pasted, drift-guarded source.
 
 \paragraph{(3) Build it.} The visitor solves
 \texttt{lab\_mla.py}---two matmuls---and watches the grader compare their
-latent round-trip against the real module: \texttt{PASS} on success, a
-targeted assertion message on failure. For skeptical visitors we rename a
-function in \texttt{attention.py} and run the drift guard to show the
-documentation fail loudly.
+latent round-trip against the real module (Figure~\ref{fig:session}):
+\texttt{PASS} on success, a targeted assertion message on failure. For
+skeptical visitors we rename a function in \texttt{attention.py} and run the
+drift guard to show the documentation fail loudly.
+
+\begin{figure}[t]
+\begin{lstlisting}
+$ python course/03-attention-mla/lab_mla.py
+NotImplementedError: implement me - delete
+  this line and write the two matmuls
+# edit: latent = kv @ w_down
+#       reconstructed = latent @ w_up
+$ python course/03-attention-mla/lab_mla.py
+PASS -- you implemented the core of MLA.
+$ python course/03-attention-mla/ablation.py
+KV cache, bytes/token/layer (bf16):
+  MHA (n_kv_head=8)   2048  1.0x smaller
+  MQA (n_kv_head=1)    256  8.0x smaller
+  MLA (latent=128)     256  8.0x smaller
+\end{lstlisting}
+\caption{\textbf{Session snapshot of demo steps (3)--(4)}, verbatim: the lab
+fails until implemented, the grader confirms against the real module, and the
+module's ablation prints its measured payoff.}
+\label{fig:session}
+\end{figure}
 
 \paragraph{(4) Measure and break it.} We run the module's ablation (the
 $8\times$ cache table), then halve \texttt{kv\_lora\_rank} in a preset and
