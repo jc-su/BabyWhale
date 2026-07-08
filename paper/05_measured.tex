@@ -9,23 +9,21 @@ print}, so a reader can reproduce every curve with one command.
 \begin{figure}[t]
   \centering
   \input{figures/fig_ablations}
-  \caption{\textbf{Two of the six built-in ablations} (values as printed by
-  \texttt{course/.../ablation.py}). \emph{Top:} per-layer attention MACs,
-  full vs.\ a 256-token sliding window ($d{=}512$)---the quadratic/linear
-  split that motivates windowed and compressed attention (Modules 02/04).
-  \emph{Bottom:} token-forwards to generate $n$ tokens with and without a KV
-  cache---the $O(n^2)\!\to\!O(n)$ decode saving (Module 14) reaches
-  $2048\times$ at $n{=}4096$.}
+  \caption{\textbf{One of the six built-in ablations} (values as printed by
+  \texttt{course/14-kv-cache/ablation.py}): token-forwards to generate $n$
+  tokens with and without a KV cache---the $O(n^2)\!\to\!O(n)$ decode saving
+  reaches $2048\times$ at $n{=}4096$.}
   \label{fig:ablations}
 \end{figure}
 
-\paragraph{Analytic ablations.} Figure~\ref{fig:ablations} shows two of the
-six: attention cost scaling and the KV-cache decode saving. The others print
-the MLA cache footprint (MHA $2048$\,B vs.\ MLA $256$\,B per token per layer
-at 8 heads $\times$ 128 dims, bf16: $8\times$ smaller at MQA size), MoE's
-decoupling ($8\times$ parameters at $2\times$ FLOPs for 8 experts, top-2),
-expected speculative tokens per verify pass ($4.1\times$ at draft-acceptance
-$p{=}0.9$, $k{=}4$), and bf16$\to$FP4 weight memory ($4\times$).
+\paragraph{Analytic ablations.} Figure~\ref{fig:ablations} shows one of the
+six; the others print attention MACs under a sliding window ($16\times$ fewer
+than full attention at $n{=}4096$, $W{=}256$), the MLA cache footprint (MHA
+$2048$\,B vs.\ MLA $256$\,B per token per layer at 8 heads $\times$ 128 dims,
+bf16: $8\times$ smaller at MQA size), MoE's decoupling ($8\times$ parameters
+at $2\times$ FLOPs for 8 experts, top-2), expected speculative tokens per
+verify pass ($4.1\times$ at draft-acceptance $p{=}0.9$, $k{=}4$), and
+bf16$\to$FP4 weight memory ($4\times$).
 
 \begin{figure}[t]
   \centering
@@ -40,6 +38,7 @@ $p{=}0.9$, $k{=}4$), and bf16$\to$FP4 weight memory ($4\times$).
 \end{figure}
 
 \input{figures/tab_ladder}
+\input{figures/tab_biography}
 \input{figures/tab_audit}
 
 \paragraph{The preset ladder, trained.} Beyond analytic ablations, the paper
@@ -54,6 +53,17 @@ capabilities and serving rather than perplexity. The same script measures
 cohort batching end-to-end on the laptop: aggregate decode throughput rises
 from 316 to 546, 810, and 1{,}389 tok/s for cohorts of 1, 2, 4, and 8
 ($4.4\times$)---the number Module~17's ``payoff'' beat promises.
+
+\paragraph{The shipped lineage, evaluated.} The repository also ships a full
+lifecycle lineage---one $\sim$11M-parameter checkpoint chained through
+pre-training, mid-training, SFT, DPO, and GRPO by the CLI---and
+Table~\ref{tab:biography} evaluates it stage by stage with the system's own
+eval commands. The wins are real (mid-training more than halves code-domain
+bits-per-byte on text the pre-train checkpoint never saw), and so are the
+smoke-scale failures, which we report rather than hide: the DPO run diverged,
+and GRPO drives its partial-credit reward to the maximum while full-solve
+pass@1 remains zero---the likelihood-vs-capability gap the course's
+evaluation module exists to teach.
 
 \paragraph{A real end-to-end run.} Figure~\ref{fig:loss} shows the course's
 reference pre-training run, produced by the repository's own CLI on consumer

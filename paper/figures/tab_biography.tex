@@ -1,0 +1,27 @@
+% Table: the shipped checkpoint lineage, measured stage by stage.
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Stage} & \textbf{Training signal} & \textbf{Capability probe} \\
+\midrule
+pre-train & CE $5.70{\to}4.39$ & bpb 3.15 / code 2.56 \\
+mid-train & CE $3.09{\to}2.32$ & bpb 1.71 / code \textbf{1.15} \\
+SFT       & CE $1.61{\to}0.12$ & answers in-format \\
+DPO       & \emph{diverged} ($0.15{\to}3.50$) & --- \\
+GRPO      & reward $2.25{\to}16.0$ (max) & pass@1 $=0$ \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{The shipped lineage, measured} (one $\sim$11M-parameter model
+chained through the lifecycle by the repository CLI; artifacts in
+\texttt{runs/}, numbers in \texttt{paper/experiments/stage\_evals.json}).
+Bits-per-byte is scored on the pre-training corpus / on repository code that
+the \emph{pre-train} checkpoint never saw (know-nothing baseline: 8.0);
+mid-training's specialization is visible on both. The last two rows are
+deliberately candid: the DPO smoke run diverged, and GRPO \emph{saturates its
+partial-credit reward while full-solve pass@1 stays zero} at this scale---the
+likelihood-vs-capability gap that Module~19 teaches, observed in the system's
+own artifacts.}
+\label{tab:biography}
+\end{table}

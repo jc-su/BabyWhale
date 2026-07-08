@@ -1,10 +1,12 @@
 \section{The Underlying System}
 \label{sec:system}
 
-BabyWhale's library (\texttt{baby\_whale\_v4}, $\sim$14.5K lines of Python
+BabyWhale's library (\texttt{baby\_whale\_v4}, $\sim$15.8K lines of Python
 3.14 on MLX \citep{hannun2023mlx}) is a deliberately readable DeepSeek-style
-stack. It is not a toy re-implementation for the course: it is a tested system
-the course points into.
+stack---accompanied by 5.8K lines of tests, 2.0K lines of course tooling
+(graders, ablations, milestones), and $\sim$15K words of course text. It is
+not a toy re-implementation for the course: it is a tested system the course
+points into.
 
 \paragraph{Architecture.} A pre-norm decoder with a per-layer attention
 schedule mixing sliding-window MQA, \emph{multi-head latent attention} (MLA)
