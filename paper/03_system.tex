@@ -31,6 +31,26 @@ speculative decoding; and a continuous-batching server in which a single loop
 thread owns the model and cohorts of requests share batched forwards,
 including a ragged mixed-length mode.
 
+\paragraph{The platform as pedagogy.} MLX is not a portability compromise
+but a teaching choice, for three technical reasons and one social one.
+\emph{(i) Readable modeling:} MLX's NumPy-like, Python-first operations mean
+the code the course pastes \emph{is} the code that executes---the
+theory-to-code bridges (\S\ref{sec:course}) map equations onto visible
+\texttt{mx.*} calls rather than opaque fused kernels; the entire stack is
+pure MLX Python (optional Metal FP4 experiments are isolated in one module).
+\emph{(ii) Unified memory:} CPU and GPU share one address space, so the
+systems modules teach paging, offload, and batching as \emph{concepts},
+without host--device transfer plumbing. \emph{(iii) Explicit laziness:}
+computation materializes at \texttt{mx.eval}, making evaluation order and
+memory behavior first-class course content rather than hidden runtime
+detail. \emph{(iv) Reach:} Apple-Silicon Macs are the daily machine of a
+large share of developers and students, and MLX carries a substantial
+ecosystem---\texttt{mlx-lm} and thousands of community-converted open-weight
+models on the Hugging Face \texttt{mlx-community} hub
+\citep{mlxlm,mlxcommunity}---so a learner's skills transfer directly from
+BabyWhale's 11M-parameter lineage to running and fine-tuning real models on
+the same machine.
+
 \paragraph{Design principles as curriculum.} The library enforces
 fail-fast validation (unknown modes crash rather than fall back), typed
 boundaries, and \emph{tested equivalences}: every ``$X$ is identical to $Y$''

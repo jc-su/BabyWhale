@@ -24,7 +24,8 @@ checkpoint is born (architecture), learns to read (pre-training), specializes
 (mid-training), learns to behave (SFT, DPO), learns to reason (GRPO with a
 code sandbox), is compressed (FP4), goes to work (paged KV, speculative
 decoding, continuous batching), and is judged (bits-per-byte, pass@1,
-long-context retrieval)---all on a laptop, in minutes per stage.
+long-context retrieval)---all on consumer Apple-Silicon hardware, in minutes
+per stage.
 
 \paragraph{Target audience and impact.} BabyWhale serves three groups:
 (i)~\emph{self-learners and graduate students} who know basic deep learning
@@ -33,8 +34,12 @@ and want the modern LLM stack end-to-end rather than in slices;
 autograde with a plain \texttt{python} invocation---no grading
 infrastructure; and (iii)~\emph{research engineers onboarding onto LLM
 systems}, for whom the measured ablations double as a systems-intuition
-reference. Because everything runs in classroom time on a laptop, the
-barrier to adoption is one machine, not a cluster.
+reference. The platform choice multiplies the reach: the target machine is
+the Mac that a large share of developers and students already use daily, and
+MLX's ecosystem---\texttt{mlx-lm} and thousands of community-converted
+open-weight models \citep{mlxlm,mlxcommunity}---means what is learned here
+applies immediately to real models, not only to the course's own. The barrier
+to adoption is a software install, not a cluster.
 
 Our second contribution addresses a failure mode we measured in ourselves:
 \textbf{educational prose drifts from code}. While auditing our own drafts
