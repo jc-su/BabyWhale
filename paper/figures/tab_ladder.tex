@@ -14,13 +14,10 @@
 \texttt{full} (+mHC)        & 618{,}640 & 2.365 & 17{,}821 \\
 \bottomrule
 \end{tabular}
-\caption{\textbf{The course's preset ladder, actually trained} (240 steps,
-identical data/optimizer; byte-level LM on the course's own Markdown; Apple
-M-series Mac; \texttt{paper/experiments/run\_experiments.py}). At this toy
-scale every rung reaches statistically indistinguishable language-model loss
-while its parameter and throughput costs are plainly visible---which is
-precisely the course's lesson: these features are load-bearing for
-\emph{capabilities and serving} (KV memory, long context, decode throughput),
-not for tiny-scale perplexity, and each module measures them where they bite.}
+\caption{\textbf{The curriculum's preset ladder, trained} under identical
+conditions (240 steps, same data/optimizer/seed; byte-level LM; M-series Mac;
+\texttt{run\_experiments.py}). Losses tie at this scale while parameter and
+throughput costs differ---the mechanisms earn their keep in capabilities and
+serving, which is where the course measures them.}
 \label{tab:ladder}
 \end{table}

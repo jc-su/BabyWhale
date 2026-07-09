@@ -13,15 +13,12 @@ DPO       & \emph{diverged} ($0.15{\to}3.50$) & --- \\
 GRPO      & reward $2.25{\to}16.0$ (max) & pass@1 $=0$ \\
 \bottomrule
 \end{tabular}
-\caption{\textbf{The shipped lineage, measured} (one $\sim$11M-parameter model
-chained through the lifecycle by the repository CLI; artifacts in
-\texttt{runs/}, numbers in \texttt{paper/experiments/stage\_evals.json}).
-Bits-per-byte is scored on the pre-training corpus / on repository code that
-the \emph{pre-train} checkpoint never saw (know-nothing baseline: 8.0);
-mid-training's specialization is visible on both. The last two rows are
-deliberately candid: the DPO smoke run diverged, and GRPO \emph{saturates its
-partial-credit reward while full-solve pass@1 stays zero} at this scale---the
-likelihood-vs-capability gap that Module~19 teaches, observed in the system's
-own artifacts.}
+\caption{\textbf{A staged lineage, measured}: one $\sim$11M-parameter model
+chained through the lifecycle by the CLI
+(\texttt{stage\_evals.json}; full matrix in Appendix~\ref{app:measure}).
+Bits-per-byte on the pre-training corpus~/ on repository code unseen by the
+pre-train checkpoint (baseline 8.0). The last rows are candid: DPO's small
+run diverged, and GRPO saturates its partial-credit reward while pass@1 stays
+zero---the likelihood-vs-capability gap the evaluation module teaches.}
 \label{tab:biography}
 \end{table}

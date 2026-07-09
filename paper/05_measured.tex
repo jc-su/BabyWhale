@@ -56,9 +56,20 @@ indistinguishable language-model loss while its parameter and structural
 costs are visible---supporting the curriculum's framing that these
 mechanisms earn their keep in capabilities and serving rather than in
 small-scale perplexity, and that they must therefore be \emph{measured}
-there. The same script measures serving directly: aggregate decode
-throughput rises from 316 to 1{,}389 tok/s as the cohort grows from 1 to 8
-requests ($4.4\times$; per-size figures in Appendix~\ref{app:measure}).
+there. The same script measures serving directly: Figure~\ref{fig:batching}
+shows aggregate decode throughput rising from 316 to 1{,}389 tok/s as the
+cohort grows from 1 to 8 requests ($4.4\times$; Appendix~\ref{app:measure}).
+
+\begin{figure}[t]
+  \centering
+  \input{figures/fig_batching}
+  \caption{\textbf{Measured cohort-batched decode} on the machine of
+  Table~\ref{tab:ladder}, end-to-end including prefill
+  (\texttt{run\_experiments.py}). Decode is memory-bandwidth-bound, so
+  batching raises aggregate throughput ($4.4\times$ at 8)---the trade the
+  serving module teaches.}
+  \label{fig:batching}
+\end{figure}
 
 \paragraph{A staged lineage, evaluated.} The repository ships a full
 lifecycle lineage---one $\sim$11M-parameter checkpoint chained through

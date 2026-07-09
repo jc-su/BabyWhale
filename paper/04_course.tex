@@ -9,8 +9,20 @@ scored by functional equivalence against the maintained module it teaches;
 \textbf{G2}~(\emph{drift-guarded exposition}): every identifier in displayed
 code must exist in the referenced source file and in the page that shows it,
 enforced by tests; \textbf{G3}~(\emph{claim--command coupling}): every
-quantitative statement names the committed command that regenerates it. The
-subsections below describe the anatomy these guards protect.
+quantitative statement names the committed command that regenerates it
+(Figure~\ref{fig:guards}). The paragraphs below describe the anatomy these
+guards protect.
+
+\begin{figure}[t]
+  \centering
+  \input{figures/fig_guards}
+  \caption{\textbf{Machine-checked courseware.} Three artifact types are each
+  bound to the maintained implementation by a guard---exercises by behavioral
+  equivalence (G1), displayed code by symbol existence (G2), quantitative
+  claims by regeneration scripts (G3)---and continuous integration fails when
+  any binding breaks.}
+  \label{fig:guards}
+\end{figure}
 
 \paragraph{Five beats.} Every module reads as: \emph{the wall} (what breaks
 without this feature), \emph{the idea} (theory and the paper), \emph{from
