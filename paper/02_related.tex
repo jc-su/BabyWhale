@@ -1,5 +1,18 @@
-\section{Related Systems}
+\section{Related Work}
 \label{sec:related}
+
+\paragraph{Keeping documents true to programs.} The aspiration behind
+machine-checked courseware descends from literate programming
+\citep{knuth1984literate}, which interleaves exposition with the executable
+source, and from executable-documentation practice such as \texttt{doctest},
+which runs the examples embedded in prose. BabyWhale extends this line in two
+directions: the checked unit is not an embedded example but a \emph{claim
+about a maintained external system} (a displayed excerpt, an exercise's
+semantics, a measured number), and the checking is adversarial---our audit
+(\S\ref{sec:eval}) shows the errors that matter are semantic and survive
+example-level testing.
+
+\paragraph{Educational systems.}
 
 Table~\ref{tab:comparison} situates BabyWhale among widely used educational
 resources. nanoGPT \citep{karpathy2022nanogpt} and \citet{raschka2024build}

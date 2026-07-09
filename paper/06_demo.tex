@@ -1,58 +1,19 @@
 \section{Demonstration}
 \label{sec:demo}
 
-The booth demo is a 10-minute arc through one module, mirroring how the
-course is used.
+The conference demonstration compresses the course's usage pattern into ten
+minutes: visitors watch the full lifecycle execute in thirty seconds, read a
+module whose displayed code is drift-guarded, solve an exercise live and watch
+it graded against the maintained implementation, and then perturb the system
+(halving \texttt{kv\_lora\_rank}; renaming a library function to trip the
+guards; submitting concurrent requests to the batching server). Because the
+target platform is the machine many attendees carry, the session doubles as an
+install-fest: visitors can reproduce every step on their own devices. The
+complete walkthrough, with a session transcript, is given in
+Appendix~\ref{app:demo}.
 
-\paragraph{(1) The whole lifecycle in 30 seconds.} We run
-\texttt{course/00-the-map/journey.py}: a tiny model is built, trained on a
-toy corpus, and sampled---loss falls from $\sim$6.0 to $\sim$2.5 live. This
-frames everything else: the rest of the course makes each leg of the loop
-\emph{good}.
-
-\paragraph{(2) Read a module.} On the rendered site we open Module 03 (MLA):
-the wall (KV memory), the theory-to-code table (each term of
-$c = xW_{DKV}$, cache $c$, $K,V = \mathrm{split}(cW_{UKV})$ mapped to the
-exact lines in \texttt{attention.py}), and the pasted, drift-guarded source.
-
-\paragraph{(3) Build it.} The visitor solves
-\texttt{lab\_mla.py}---two matmuls---and watches the grader compare their
-latent round-trip against the real module (Figure~\ref{fig:session}):
-\texttt{PASS} on success, a targeted assertion message on failure. For
-skeptical visitors we rename a function in \texttt{attention.py} and run the
-drift guard to show the documentation fail loudly.
-
-\begin{figure}[t]
-\begin{lstlisting}
-$ python course/03-attention-mla/lab_mla.py
-NotImplementedError: implement me - delete
-  this line and write the two matmuls
-# edit: latent = kv @ w_down
-#       reconstructed = latent @ w_up
-$ python course/03-attention-mla/lab_mla.py
-PASS -- you implemented the core of MLA.
-$ python course/03-attention-mla/ablation.py
-KV cache, bytes/token/layer (bf16):
-  MHA (n_kv_head=8)   2048  1.0x smaller
-  MQA (n_kv_head=1)    256  8.0x smaller
-  MLA (latent=128)     256  8.0x smaller
-\end{lstlisting}
-\caption{\textbf{Session snapshot of demo steps (3)--(4)}, verbatim: the lab
-fails until implemented, the grader confirms against the real module, and the
-module's ablation prints its measured payoff.}
-\label{fig:session}
-\end{figure}
-
-\paragraph{(4) Measure and break it.} We run the module's ablation (the
-$8\times$ cache table), then halve \texttt{kv\_lora\_rank} in a preset and
-re-run---the number moves, the tradeoff is felt. Finally we start the
-continuous-batching server, submit two concurrent chat requests, and show the
-short one finishing first while both stream. Because the target platform is
-the machine many attendees carry, the demo doubles as an install-fest:
-visitors can clone the repository and reproduce every step on their own Mac
-during the session.
-
-\paragraph{Availability.} Code, course, and CI are public under MIT:
-\url{https://github.com/jc-su/BabyWhale} (rendered course:
-\url{https://jc-su.github.io/BabyWhale}). Requirements: an Apple-Silicon Mac
-(MLX) and Python 3.14; every demo step above also runs in the project's CI.
+\paragraph{Availability.} Code, courseware, experiments, and CI are public
+under the MIT license at \url{https://github.com/jc-su/BabyWhale}; the
+rendered course is served at \url{https://jc-su.github.io/BabyWhale}.
+Requirements: an Apple-Silicon Mac (MLX) and Python 3.14. Every demonstration
+step above also runs in the project's CI.

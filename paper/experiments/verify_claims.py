@@ -29,21 +29,22 @@ def tex(name: str) -> str:
     return (PAPER / name).read_text()
 
 
-# 1. test count: "334 tests" claimed in abstract + section 5
+# 1. test count claimed in the abstract
 ran = subprocess.run(
     [str(ROOT / ".venv/bin/python"), "-m", "unittest", "discover", "-s", "tests"],
     cwd=ROOT, capture_output=True, text=True, timeout=600,
 )
 m = re.search(r"Ran (\d+) test", ran.stderr + ran.stdout)
 n_tests = int(m.group(1)) if m else -1
-claimed = int(re.search(r"(\d+) tests", tex("00_abstract.tex")).group(1))
+claimed = int(re.search(r"(\d+)\s+(?:continuously run\s+)?tests", tex("00_abstract.tex")).group(1))
 check("test count", n_tests == claimed, f"suite={n_tests}, paper={claimed}")
 
-# 2. labs / modules / ablations
+# 2. labs / modules / ablations (claimed in section 4 and the appendix)
 n_labs = len(list((ROOT / "course").glob("[0-9]*/lab_*.py")))
-check("23 labs", n_labs == 23 and "23" in tex("00_abstract.tex"), f"found {n_labs}")
+check("23 labs", n_labs == 23 and "23" in tex("04_course.tex")
+      and "23 exercises" in tex("90_appendix.tex"), f"found {n_labs}")
 n_modules = len([p for p in (ROOT / "course").iterdir() if p.is_dir() and p.name[:2].isdigit()])
-check("22 modules", n_modules == 22 and "22-module" in tex("00_abstract.tex"), f"found {n_modules}")
+check("22 modules", n_modules == 22 and "22 modules" in tex("04_course.tex"), f"found {n_modules}")
 n_abl = len(list((ROOT / "course").glob("[0-9]*/ablation.py")))
 check("six ablations", n_abl == 6 and "six" in tex("05_measured.tex"), f"found {n_abl}")
 
@@ -54,9 +55,9 @@ n_bridges = sum(
 )
 check("20 bridges", n_bridges == 20 and "all 20" in tex("05_measured.tex"), f"found {n_bridges}")
 
-# 4. license
+# 4. license (stated once, in the availability paragraph)
 check("MIT license", (ROOT / "LICENSE").read_text().startswith("The MIT License")
-      and "MIT" in tex("00_abstract.tex"))
+      and "MIT" in tex("06_demo.tex"))
 
 # 5. ladder table matches results.json
 results = json.loads((PAPER / "experiments/results.json").read_text())
@@ -68,11 +69,21 @@ for preset, row in results["ladder"].items():
         ok = False
 check("ladder table == results.json", ok)
 
-# 6. batch-scaling numbers quoted in section 5
+# 6. batch-scaling numbers quoted in section 5 + the appendix table
 scaling = results["bench"]["batch_tok_s_by_group"]
-sec5 = tex("05_measured.tex")
-ok = all(f"{v:,}".replace(",", "{,}") in sec5 or str(v) in sec5 for v in scaling.values())
+body = tex("05_measured.tex") + tex("90_appendix.tex")
+ok = all(f"{v:,}".replace(",", "{,}") in body or str(v) in body for v in scaling.values())
 check("batch scaling == results.json", ok, str(scaling))
+
+# 6b. appendix bpb table matches stage_evals.json (3-decimal rounding)
+evals = json.loads((PAPER / "experiments/stage_evals.json").read_text())
+appx = tex("90_appendix.tex")
+ok = all(
+    f"{evals['bits_per_byte'][ckpt][corpus]:.3f}" in appx
+    for ckpt in ("pretrain_ckpt", "midtrain_ckpt")
+    for corpus in ("pretrain_corpus", "repo_code")
+)
+check("appendix bpb == stage_evals.json", ok)
 
 # 7. Figure 3 coordinates match the committed reference run
 ref = json.loads((PAPER / "experiments/pretrain_reference.json").read_text())

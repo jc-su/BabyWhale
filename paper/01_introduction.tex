@@ -41,14 +41,25 @@ open-weight models \citep{mlxlm,mlxcommunity}---means what is learned here
 applies immediately to real models, not only to the course's own. The barrier
 to adoption is a software install, not a cluster.
 
-Our second contribution addresses a failure mode we measured in ourselves:
-\textbf{educational prose drifts from code}. While auditing our own drafts
-against the implementation we found and fixed eight confidently wrong
-explanations (a mis-stated gating function, a wrong loss attribution, an
-inverted masking claim). BabyWhale therefore treats pedagogy as a tested
-artifact: labs are graded against the real modules, pasted snippets are
-CI-checked against the source, and every quantitative claim is a command the
-reader can run (\S\ref{sec:course}, \S\ref{sec:measured}).
+The second idea addresses a failure mode we first measured in ourselves:
+\emph{educational prose drifts from the code it describes}. While auditing our
+own drafts against the implementation we found and fixed eight confidently
+wrong explanations---a mis-stated gating function, a wrong loss attribution,
+an inverted masking claim (\S\ref{sec:eval}). BabyWhale therefore treats
+pedagogy as a tested artifact, through three mechanisms we collectively call
+\emph{machine-checked courseware}: exercises graded by functional equivalence
+against the maintained implementation, displayed code guarded by tests that
+fail on drift, and quantitative claims coupled to the commands that
+regenerate them (\S\ref{sec:course}).
+
+\paragraph{Contributions.} (1)~A curriculum design---the model biography---%
+that makes the \emph{connected} lifecycle, rather than any single stage, the
+object of study; (2)~machine-checked courseware, a methodology for keeping
+teaching material consistent with a living system, which transfers to any
+documented software; (3)~an open implementation with measured evidence: a
+trained ablation ladder over the curriculum's architecture presets, staged
+evaluations of a checkpoint lineage, and integrity checks that run in public
+CI (\S\ref{sec:eval}).
 
 \begin{figure*}[t]
   \centering

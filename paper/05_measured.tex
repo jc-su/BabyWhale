@@ -1,93 +1,105 @@
-\section{Every Claim Is a Command}
-\label{sec:measured}
+\section{Evaluation}
+\label{sec:eval}
 
-A recurring failure of educational material is the unmeasured claim (``MLA
-saves memory''). In BabyWhale each module's payoff beat is a runnable script;
-the figures below are plotted from the \emph{same numbers those scripts
-print}, so a reader can reproduce every curve with one command.
+We evaluate BabyWhale along three axes: whether the artifact is correct
+(\S\ref{sec:eval-artifact}), whether its teaching content is accurate
+(\S\ref{sec:eval-audit}), and whether the system's pedagogical claims about
+itself hold when measured (\S\ref{sec:eval-measured}). A controlled study of
+human learning outcomes is deliberately out of scope for this system paper
+and discussed under \emph{Limitations}.
 
-\begin{figure}[t]
-  \centering
-  \input{figures/fig_ablations}
-  \caption{\textbf{One of the six built-in ablations} (values as printed by
-  \texttt{course/14-kv-cache/ablation.py}): token-forwards to generate $n$
-  tokens with and without a KV cache---the $O(n^2)\!\to\!O(n)$ decode saving
-  reaches $2048\times$ at $n{=}4096$.}
-  \label{fig:ablations}
-\end{figure}
+\subsection{Artifact verification}
+\label{sec:eval-artifact}
 
-\paragraph{Analytic ablations.} Figure~\ref{fig:ablations} shows one of the
-six; the others print attention MACs under a sliding window ($16\times$ fewer
-than full attention at $n{=}4096$, $W{=}256$), the MLA cache footprint (MHA
-$2048$\,B vs.\ MLA $256$\,B per token per layer at 8 heads $\times$ 128 dims,
-bf16: $8\times$ smaller at MQA size), MoE's decoupling ($8\times$ parameters
-at $2\times$ FLOPs for 8 experts, top-2), expected speculative tokens per
-verify pass ($4.1\times$ at draft-acceptance $p{=}0.9$, $k{=}4$), and
-bf16$\to$FP4 weight memory ($4\times$).
+The released system carries 334 tests, run in public CI on Apple-Silicon
+hosts on every push: unit and integration tests for the library, one grader
+per exercise (each proven to accept the reference solution \emph{and} to
+reject a representative incorrect one), two milestones that train small
+models to criterion inside the suite, the G2 drift and coverage guards, and a
+strict documentation build. CI also performs a from-scratch environment sync
+per commit---a continuous clean-machine installation test. Following G3, the
+paper itself is treated as courseware: a committed script re-derives every
+countable claim in this manuscript (test counts, exercise and module
+inventories, the numbers in Tables~\ref{tab:ladder}--\ref{tab:biography} and
+Figure~\ref{fig:loss}) from the repository and fails on any mismatch; all
+eleven checks pass at submission time.
+
+\subsection{Content-accuracy audit}
+\label{sec:eval-audit}
+
+Before the guards existed we line-audited all 20 theory-to-code bridges
+against the implementation. The audit found \textbf{8 confidently wrong
+explanations}, taxonomized in Table~\ref{tab:audit}. Two properties of this
+error distribution shaped the system. First, every error was
+\emph{semantic}---a wrong functional form, scope, offset, factorization, or
+attribution---so symbol-level checking alone cannot catch the errors that
+matter; this motivates pasting real code (G2 makes the evidence visible next
+to the claim) and grading exercises by behavior rather than by text (G1).
+Second, the errors were written by authors with full access to the source,
+suggesting that drift is a property of the writing process, not of author
+diligence---hence continuous enforcement rather than one-time review.
+
+\input{figures/tab_audit}
+
+\subsection{Measured system behavior}
+\label{sec:eval-measured}
+
+\input{figures/tab_ladder}
+\input{figures/tab_biography}
+
+\paragraph{The curriculum's ablation ladder, trained.}
+Table~\ref{tab:ladder} trains all six architecture presets of the course's
+motivation ladder under identical conditions
+(\texttt{paper/experiments/run\_experiments.py}; training curves in
+Appendix~\ref{app:measure}). At this scale every rung reaches statistically
+indistinguishable language-model loss while its parameter and structural
+costs are visible---supporting the curriculum's framing that these
+mechanisms earn their keep in capabilities and serving rather than in
+small-scale perplexity, and that they must therefore be \emph{measured}
+there. The same script measures serving directly: aggregate decode
+throughput rises from 316 to 1{,}389 tok/s as the cohort grows from 1 to 8
+requests ($4.4\times$; per-size figures in Appendix~\ref{app:measure}).
+
+\paragraph{A staged lineage, evaluated.} The repository ships a full
+lifecycle lineage---one $\sim$11M-parameter checkpoint chained through
+pre-training, mid-training, SFT, DPO, and GRPO by the CLI---which
+Table~\ref{tab:biography} evaluates stage by stage with the system's own
+evaluation commands. The gains are real: mid-training more than halves
+code-domain bits-per-byte on text the pre-training checkpoint never saw. So
+are the small-scale failures, which we report rather than suppress: the DPO
+run diverged, and GRPO drives its partial-credit reward to the maximum while
+full-solve pass@1 remains zero---an observed instance of the
+likelihood-versus-capability gap that the course's evaluation module exists
+to teach.
 
 \begin{figure}[t]
   \centering
   \input{figures/fig_loss}
-  \caption{\textbf{The lifecycle runs end-to-end on consumer Apple Silicon.}
-  Training loss of the course's reference pre-training run: a 5.6M-parameter
-  model (2048-token BPE vocabulary) over 15.2M tokens---800 steps in 156\,s
-  on an M-series Mac under MLX ($\sim$10.5K tok/s, 1.8\,GB peak, bf16).
-  Held-out evaluation loss
-  4.89 (dashed). The same checkpoint then proceeds through mid-training,
-  SFT, DPO, RL, quantization, and serving in the course.}
+  \caption{\textbf{The reference pre-training run.} Training loss of the
+  course's reference run: a 5.6M-parameter model (2048-token BPE vocabulary)
+  over 15.2M tokens---800 steps in 156\,s on an M-series Mac under MLX
+  ($\sim$10.5K tok/s, 1.8\,GB peak, bf16); held-out evaluation loss 4.89
+  (dashed). The same checkpoint then proceeds through mid-training, SFT,
+  DPO, RL, quantization, and serving in the course.}
   \label{fig:loss}
 \end{figure}
 
-\input{figures/tab_ladder}
-\input{figures/tab_biography}
-\input{figures/tab_audit}
-
-\paragraph{The preset ladder, trained.} Beyond analytic ablations, the paper
-ships a one-command experiment script
-(\texttt{paper/experiments/run\_experiments.py}) that regenerates every
-measured number below on the reader's own machine. Table~\ref{tab:ladder}
-trains all six presets of the course's motivation ladder under identical
-conditions: the architecture features cost parameters and decode-relevant
-structure while leaving toy-scale LM loss essentially unchanged---evidence
-for the course's framing that their value must be (and is) measured in
-capabilities and serving rather than perplexity. The same script measures
-cohort batching end-to-end on the same machine: aggregate decode throughput rises
-from 316 to 546, 810, and 1{,}389 tok/s for cohorts of 1, 2, 4, and 8
-($4.4\times$)---the number Module~17's ``payoff'' beat promises.
-
-\paragraph{The shipped lineage, evaluated.} The repository also ships a full
-lifecycle lineage---one $\sim$11M-parameter checkpoint chained through
-pre-training, mid-training, SFT, DPO, and GRPO by the CLI---and
-Table~\ref{tab:biography} evaluates it stage by stage with the system's own
-eval commands. The wins are real (mid-training more than halves code-domain
-bits-per-byte on text the pre-train checkpoint never saw), and so are the
-smoke-scale failures, which we report rather than hide: the DPO run diverged,
-and GRPO drives its partial-credit reward to the maximum while full-solve
-pass@1 remains zero---the likelihood-vs-capability gap the course's
-evaluation module exists to teach.
-
-\paragraph{A real end-to-end run.} Figure~\ref{fig:loss} shows the course's
+\paragraph{End-to-end execution.} Figure~\ref{fig:loss} shows the course's
 reference pre-training run, produced by the repository's own CLI on consumer
-hardware. The scale matters pedagogically: every stage of the lifecycle,
-including the RL loop and the batching server, completes in classroom time on
-a machine learners already own, so ``break it and re-run'' is a five-minute
-experiment rather than a cluster
-job. The fast byte-BPE encoder this run depends on is itself a course story:
-the naive encoder stalls on long lines, while the heap-based one packs the
-15.2M-token corpus in 52\,s---and the corresponding lab requires the
-learner's simple encoder to match it token-for-token.
+Apple-Silicon hardware. The scale matters pedagogically: every lifecycle
+stage, including the RL loop and the batching server, completes in classroom
+time on a machine learners already own, so ``break it and re-run'' is a
+five-minute experiment rather than a cluster job. Analytic cost ablations
+that accompany each systems module (KV-cache work, attention scaling, MLA
+cache footprint, speculative expected tokens, quantization memory) are
+summarized in Figure~\ref{fig:ablations} and Appendix~\ref{app:measure}.
 
-\paragraph{How the system was evaluated.} Three ways, all mechanical and
-reproducible. \emph{(i) Artifact verification:} 334 tests run green in public
-CI on Apple-Silicon runners, including one grader per lab (each proven to
-accept the reference solution \emph{and} reject a representative wrong one),
-two milestones that train real models inside the suite, the drift and
-coverage guards, and a strict documentation build; the course site redeploys
-on every push. \emph{(ii) A quantified content audit:} we line-audited all 20
-theory-to-code bridges against the implementation and found \textbf{8
-inaccuracies}, taxonomized in Table~\ref{tab:audit}---all corrected, and the
-error classes directly shaped the integrity mechanisms. \emph{(iii)
-Reproducibility:} CI performs a from-scratch environment sync and full run on
-every commit, i.e., a continuous clean-machine installation test. We have not
-yet run a controlled human learning study; this is the main open evaluation
-(\S\emph{Limitations}).
+\begin{figure}[t]
+  \centering
+  \input{figures/fig_ablations}
+  \caption{\textbf{One of the six per-module cost ablations} (values as
+  printed by \texttt{course/14-kv-cache/ablation.py}): token-forwards to
+  generate $n$ tokens with and without a KV cache---the
+  $O(n^2)\!\to\!O(n)$ decode saving reaches $2048\times$ at $n{=}4096$.}
+  \label{fig:ablations}
+\end{figure}
