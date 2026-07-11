@@ -17,8 +17,9 @@ GRPO      & reward $2.25{\to}16.0$ (max) & pass@1 $=0$ \\
 chained through the lifecycle by the CLI
 (\texttt{stage\_evals.json}; full matrix in Appendix~\ref{app:measure}).
 Bits-per-byte on the pre-training corpus~/ on repository code unseen by the
-pre-train checkpoint (baseline 8.0). The last rows are candid: DPO's small
-run diverged, and GRPO saturates its partial-credit reward while pass@1 stays
-zero---the likelihood-vs-capability gap the evaluation module teaches.}
+pre-train checkpoint (baseline 8.0). DPO destabilizes under the shipped
+configuration, and GRPO saturates its partial-credit reward while exact-solve
+pass@1 stays zero---exhibiting the likelihood--capability gap the evaluation
+module teaches.}
 \label{tab:biography}
 \end{table}

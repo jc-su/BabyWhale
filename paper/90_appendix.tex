@@ -6,9 +6,8 @@ the course is used; Figure~\ref{fig:session} shows the central transcript.
 
 \paragraph{(1) The whole lifecycle in 30 seconds.} We run
 \texttt{course/00-the-map/journey.py}: a small model is built, trained on a
-toy corpus, and sampled---loss falls from $\sim$6.0 to $\sim$2.5 live. This
-frames everything else: the rest of the course makes each leg of the loop
-\emph{good}.
+demonstration corpus, and sampled---loss falls from $\sim$6.0 to $\sim$2.5
+live. The rest of the course makes each leg of this loop \emph{good}.
 
 \paragraph{(2) Read a module.} On the rendered site we open Module~03 (MLA):
 the wall (KV memory), the theory-to-code table (each term of $c = xW_{DKV}$,
@@ -17,14 +16,14 @@ cache $c$, $K,V=\mathrm{split}(cW_{UKV})$ mapped to the exact lines in
 
 \paragraph{(3) Build it.} The visitor solves \texttt{lab\_mla.py}---two
 matrix products---and watches the grader compare their latent round-trip
-against the real module: \texttt{PASS} on success, a targeted assertion
-message on failure. For skeptical visitors we rename a function in
+against the real module: \texttt{PASS} on success. For skeptical visitors
+we rename a function in
 \texttt{attention.py} and run the drift guard to show the documentation fail
 loudly.
 
 \paragraph{(4) Measure and break it.} We run the module's ablation (the
 $8\times$ cache table), then halve \texttt{kv\_lora\_rank} in a preset and
-re-run---the number moves, the trade-off is felt. Finally we start the
+re-run---the number moves. Finally we start the
 continuous-batching server, submit two concurrent chat requests, and show the
 short one finishing first while both stream.
 
@@ -52,9 +51,9 @@ module, and the module's ablation prints its measured payoff.}
 \section{The Course at a Glance}
 \label{app:syllabus}
 
-Table~\ref{tab:syllabus} lists every module with its lifecycle stage and the
-exercise it grades against the maintained implementation; the biography
-ordering of Figure~\ref{fig:lifecycle} is the recommended path.
+Table~\ref{tab:syllabus} lists every module, its lifecycle stage, and its
+graded exercise; the biography ordering of Figure~\ref{fig:lifecycle} is the
+recommended path.
 
 \begin{table}[h]
 \centering
@@ -99,18 +98,17 @@ against the maintained implementation (23 exercises in total; modules 01,
 
 \paragraph{Training curves of the ablation ladder.}
 Figure~\ref{fig:ladder-curves} plots the per-preset training curves behind
-Table~\ref{tab:ladder}; the six presets are statistically indistinguishable
-in loss at this scale while differing in parameters and structure.
+Table~\ref{tab:ladder}.
 
 \begin{figure}[h]
   \centering
   \begin{tikzpicture}
   \begin{axis}[
-    width=0.98\columnwidth, height=5.2cm,
+    width=0.98\columnwidth, height=3.2cm,
     xlabel={step}, ylabel={train CE (byte-level)},
     xmin=0, xmax=245, ymin=1.9, ymax=6.2,
     tick label style={font=\tiny}, label style={font=\scriptsize},
-    legend style={font=\tiny, draw=none, fill=none, at={(0.97,0.95)}, anchor=north east},
+    legend style={font=\tiny, draw=none, fill=none, at={(0.97,0.95)}, anchor=north east}, legend columns=2,
     grid=major, grid style={gray!20},
   ]
   \addplot[gray!70, thick] coordinates {(1,5.952)(21,3.22)(41,2.947)(61,2.611)(81,2.597)(101,2.476)(121,2.446)(141,2.605)(161,2.648)(181,2.159)(201,2.35)(221,2.259)(240,2.364)};
@@ -134,25 +132,10 @@ in loss at this scale while differing in parameters and structure.
 \end{figure}
 
 \paragraph{Serving throughput by cohort size.} End-to-end decode throughput
-(prefill included) on the same machine as Table~\ref{tab:ladder}:
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-Cohort size & 1 & 2 & 4 & 8 \\
-\midrule
-Aggregate tok/s & 316 & 546 & 810 & 1{,}389 \\
-Speedup & $1.0\times$ & $1.7\times$ & $2.6\times$ & $4.4\times$ \\
-\bottomrule
-\end{tabular}
-\caption{Cohort-batched decode throughput
-(\texttt{paper/experiments/run\_experiments.py}); decode is
-memory-bandwidth-bound, so batching raises aggregate throughput at modest
-per-request latency cost---the trade-off Module~17 teaches.}
-\label{tab:batching}
-\end{table}
+(prefill included) on the machine of Table~\ref{tab:ladder}, complementing
+Figure~\ref{fig:batching}: 316, 546, 810, and 1{,}389 aggregate tok/s at
+cohort sizes 1, 2, 4, and 8 ($1.0\times$, $1.7\times$, $2.6\times$,
+$4.4\times$).
 
 \paragraph{Bits-per-byte across the lineage.} The full matrix behind the
 capability column of Table~\ref{tab:biography} (150 blocks per corpus;
@@ -178,42 +161,15 @@ cross-domain column shows retained generality.}
 
 \paragraph{Speculative decoding, expected gain.} With $k$ drafted tokens and
 per-token acceptance probability $p$, the expected tokens emitted per verify
-pass is $(1-p^{k+1})/(1-p)$; the course's ablation prints this curve
-(Figure~\ref{fig:spec}).
+pass is $(1-p^{k+1})/(1-p)$: for the course's $k{=}4$ configuration this is
+$1.43$, $1.94$, $2.77$, and $4.10$ at $p \in \{0.3, 0.5, 0.7, 0.9\}$---up to
+$4.1\times$ fewer forward passes than greedy decoding.
 
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}
-  \begin{axis}[
-    width=0.98\columnwidth, height=4.0cm,
-    xlabel={draft acceptance probability $p$}, ylabel={tokens / verify pass},
-    xmin=0.25, xmax=0.95, ymin=1, ymax=4.5,
-    tick label style={font=\tiny}, label style={font=\scriptsize},
-    grid=major, grid style={gray!20},
-  ]
-  \addplot[blue!70!black, thick, mark=*, mark size=1.3pt]
-    coordinates {(0.3,1.4251)(0.5,1.9375)(0.7,2.7731)(0.9,4.0951)};
-  \end{axis}
-  \end{tikzpicture}
-  \caption{Expected tokens per verify pass for speculative decoding with
-  $k{=}4$ drafts (Module 16's ablation): $4.1\times$ fewer forward passes
-  than greedy at $p{=}0.9$.}
-  \label{fig:spec}
-\end{figure}
-
-\section{Reproducibility}
-\label{app:repro}
-
-All measurements in this paper regenerate from two committed scripts:
-\texttt{paper/experiments/run\_experiments.py} (Tables~\ref{tab:ladder}
-and~\ref{tab:batching}, Figure~\ref{fig:ladder-curves}) and the evaluation
-CLI invocations recorded in \texttt{paper/experiments/stage\_evals.json}
-(Tables~\ref{tab:biography} and~\ref{tab:bpb}). Figure~\ref{fig:loss}'s
-coordinates are committed as
-\texttt{paper/experiments/pretrain\_reference.json}. Following G3, the
-manuscript itself is claim-checked:
-\texttt{paper/experiments/verify\_claims.py} re-derives every countable
-statement (test, exercise, module, and ablation inventories; every number in
-the ladder, batching, and reference-run artifacts; the license and
-line-count claims) and exits non-zero on mismatch. All checks pass at
-submission time; the same script runs in the public CI of the repository.
+\paragraph{Reproducibility.} All measurements regenerate from committed
+artifacts: \texttt{run\_experiments.py} (Table~\ref{tab:ladder},
+Figure~\ref{fig:ladder-curves}),
+\texttt{stage\_evals.json} (Tables~\ref{tab:biography} and~\ref{tab:bpb}),
+and \texttt{pretrain\_reference.json} (Figure~\ref{fig:loss}). Following G3,
+\texttt{verify\_claims.py} re-derives every countable statement of this
+manuscript and exits non-zero on mismatch; all checks pass, and the script
+runs in the repository's public CI.

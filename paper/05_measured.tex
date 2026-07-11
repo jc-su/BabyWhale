@@ -4,8 +4,7 @@
 We evaluate along three axes: artifact correctness
 (\S\ref{sec:eval-artifact}), teaching-content accuracy
 (\S\ref{sec:eval-audit}), and whether the system's claims about itself hold
-when measured (\S\ref{sec:eval-measured}); a controlled human-learning study
-is out of scope (\emph{Limitations}).
+when measured (\S\ref{sec:eval-measured}).
 
 \subsection{Artifact verification}
 \label{sec:eval-artifact}
@@ -74,13 +73,12 @@ cohort grows from 1 to 8 requests ($4.4\times$; Appendix~\ref{app:measure}).
 lifecycle lineage---one $\sim$11M-parameter checkpoint chained through
 pre-training, mid-training, SFT, DPO, and GRPO by the CLI---which
 Table~\ref{tab:biography} evaluates stage by stage with the system's own
-evaluation commands. The gains are real: mid-training more than halves
-code-domain bits-per-byte on text the pre-training checkpoint never saw. So
-are the small-scale failures, which we report rather than suppress: the DPO
-run diverged, and GRPO drives its partial-credit reward to the maximum while
-full-solve pass@1 remains zero---an observed instance of the
-likelihood-versus-capability gap that the course's evaluation module exists
-to teach.
+evaluation commands. Mid-training more than halves code-domain bits-per-byte
+on text the pre-training checkpoint never saw. The lineage also exhibits two
+instructive phenomena at this scale: the DPO objective destabilizes under the
+shipped configuration, and GRPO drives its partial-credit reward to the
+maximum while exact-solve pass@1 remains zero---a concrete instance of the
+likelihood--capability gap that the course's evaluation module teaches.
 
 \begin{figure}[t]
   \centering

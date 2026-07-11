@@ -19,7 +19,7 @@ story---why mid-training exists, how MTP heads become a serving speedup, why
 the KV cache dictates attention design---must stitch it together from a dozen
 sources with incompatible codebases.
 
-BabyWhale closes this gap with one design decision: \textbf{a single tiny
+BabyWhale closes this gap with one design decision: \textbf{a single
 model's biography is the curriculum} (Figure~\ref{fig:lifecycle}). The same
 checkpoint is born (architecture), learns to read (pre-training), specializes
 (mid-training), learns to behave (SFT, DPO), learns to reason (GRPO with a

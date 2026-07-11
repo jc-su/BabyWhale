@@ -1,11 +1,10 @@
-% EMNLP System Demonstrations — 6 pages max (Limitations excluded from the limit).
+% EMNLP System Demonstrations — 6 pages max (Limitations excluded), single-blind.
 % Build: latexmk -pdf main.tex
-%
-% TODO before submission: EMNLP demo submissions are anonymized during review.
-% Replace the GitHub/site URLs with an anonymized mirror (e.g. anonymous.4open.science)
-% and switch \usepackage[review]{acl} -> [final] for camera-ready.
+% Camera-ready: switch \usepackage[review]{acl} -> [final].
 \documentclass[11pt]{article}
 \usepackage[review]{acl}
+% Single-blind: keep review-mode line numbers but show the author block.
+\makeatletter\acl@anonymizefalse\makeatother
 \usepackage{times}
 \usepackage{latexsym}
 \usepackage[T1]{fontenc}
@@ -27,9 +26,9 @@
 
 \title{BabyWhale: Machine-Checked Courseware \\ for the Full LLM Lifecycle}
 
-\author{Anonymous EMNLP submission \\
-  \texttt{anonymous@example.org}}
-  % Camera-ready: restore author block.
+\author{Jianchang Su \\
+  University of Connecticut \\
+  \texttt{reg@jianchang.su}}
 
 \begin{document}
 \maketitle
@@ -46,6 +45,7 @@
 
 \bibliography{references}
 
+\clearpage
 \appendix
 \input{90_appendix}
 
