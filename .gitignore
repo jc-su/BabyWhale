@@ -31,3 +31,6 @@ paper/*.blg
 paper/*.fls
 paper/*.fdb_latexmk
 paper/*.synctex.gz
+
+# The EMNLP paper stays local — do not publish.
+paper/
