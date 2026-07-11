@@ -20,7 +20,7 @@ paper itself is treated as courseware: a committed script re-derives every
 countable claim in this manuscript (test counts, exercise and module
 inventories, the numbers in Tables~\ref{tab:ladder}--\ref{tab:biography} and
 Figure~\ref{fig:loss}) from the repository and fails on any mismatch; all
-eleven checks pass at submission time.
+checks pass at submission time.
 
 \subsection{Content-accuracy audit}
 \label{sec:eval-audit}
@@ -97,10 +97,9 @@ reference pre-training run, produced by the repository's own CLI on consumer
 Apple-Silicon hardware. The scale matters pedagogically: every lifecycle
 stage, including the RL loop and the batching server, completes in classroom
 time on a machine learners already own, so ``break it and re-run'' is a
-five-minute experiment rather than a cluster job. Analytic cost ablations
-that accompany each systems module (KV-cache work, attention scaling, MLA
-cache footprint, speculative expected tokens, quantization memory) are
-summarized in Figure~\ref{fig:ablations} and Appendix~\ref{app:measure}.
+five-minute experiment rather than a cluster job. The analytic cost
+ablations accompanying each systems module are summarized in
+Figure~\ref{fig:ablations} and Appendix~\ref{app:measure}.
 
 \begin{figure}[t]
   \centering
