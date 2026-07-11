@@ -36,7 +36,9 @@ ran = subprocess.run(
 )
 m = re.search(r"Ran (\d+) test", ran.stderr + ran.stdout)
 n_tests = int(m.group(1)) if m else -1
-claimed = int(re.search(r"(\d+)\s+(?:continuously run\s+)?tests", tex("00_abstract.tex")).group(1))
+m_claim = re.search(r"(\d+)\s+(?:continuously run\s+)?tests", tex("00_abstract.tex"))
+assert m_claim is not None, "abstract must state the test count"
+claimed = int(m_claim.group(1))
 check("test count", n_tests == claimed, f"suite={n_tests}, paper={claimed}")
 
 # 2. labs / modules / ablations (claimed in section 4 and the appendix)

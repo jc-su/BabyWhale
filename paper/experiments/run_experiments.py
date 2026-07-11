@@ -35,7 +35,7 @@ import numpy as np  # noqa: E402
 from baby_whale_v4 import BabyWhaleV4Model  # noqa: E402
 from baby_whale_v4.inference.batched import decode_group_batched  # noqa: E402
 from baby_whale_v4.inference.engine import Engine, GenerationOptions  # noqa: E402
-from baby_whale_v4.typing import RequestId  # noqa: E402
+from baby_whale_v4.typing import RequestId, TokenizerHash  # noqa: E402
 from baby_whale_v4.training.mlx_optim import AdamW  # noqa: E402
 from course.presets import LADDER, load_preset  # noqa: E402
 
@@ -164,7 +164,7 @@ def run_bench(gen: int = 64, prompt_len: int = 16, group: int = 4) -> dict:
     cfg = load_preset("gpt-minimal")
     model = BabyWhaleV4Model(cfg)
     model.eval()
-    engine = Engine(model=model, config=cfg, tokenizer_hash="bench")
+    engine = Engine(model=model, config=cfg, tokenizer_hash=TokenizerHash("bench"))
     prompt = list(range(3, 3 + prompt_len))
     opts = GenerationOptions(max_new_tokens=gen, mode="greedy")
     # warm Metal
@@ -216,7 +216,11 @@ def run_bench(gen: int = 64, prompt_len: int = 16, group: int = 4) -> dict:
 
 if __name__ == "__main__":
     t0 = time.perf_counter()
-    results = {"ladder": run_ladder(), "needle": run_needle(), "bench": run_bench()}
+    results: dict[str, object] = {
+        "ladder": run_ladder(),
+        "needle": run_needle(),
+        "bench": run_bench(),
+    }
     results["total_seconds"] = round(time.perf_counter() - t0, 1)
     OUT.write_text(json.dumps(results, indent=2))
     print(f"\nwrote {OUT} in {results['total_seconds']}s", flush=True)
