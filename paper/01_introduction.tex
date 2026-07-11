@@ -1,6 +1,7 @@
 \section{Introduction}
 
-The gap between ``I read the transformer paper'' and ``I understand how a
+The gap between ``I read the transformer paper'' \citep{vaswani2017attention}
+and ``I understand how a
 modern LLM is actually built, trained, aligned, and served'' has widened
 dramatically. A 2025-era system is not a transformer: it is latent-compressed
 attention over a paged KV cache, sparse experts balanced without auxiliary
@@ -10,10 +11,10 @@ batching server---each the subject of its own paper, none of them teachable in
 isolation.
 
 Existing educational resources each cover one leg
-(\S\ref{sec:related}): pre-training \citep{karpathy2022nanogpt,
-raschka2024build}, single-paper architecture \citep{rush2018annotated,
-jayasiri2020labml}, deep RL \citep{achiam2018spinningup}, or ML-systems
-foundations \citep{tinytorch2026}. A learner who wants the \emph{connected}
+(\S\ref{sec:related}): nanoGPT and Raschka's book cover pre-training, the
+Annotated Transformer and labml.ai cover single-paper architecture, Spinning
+Up covers deep RL, and TinyTorch covers ML-systems foundations
+\citep{tinytorch2026}. A learner who wants the \emph{connected}
 story---why mid-training exists, how MTP heads become a serving speedup, why
 the KV cache dictates attention design---must stitch it together from a dozen
 sources with incompatible codebases.
@@ -37,7 +38,7 @@ systems}, for whom the measured ablations double as a systems-intuition
 reference. The platform choice multiplies the reach: the target machine is
 the Mac that a large share of developers and students already use daily, and
 MLX's ecosystem---\texttt{mlx-lm} and thousands of community-converted
-open-weight models \citep{mlxlm,mlxcommunity}---means what is learned here
+open-weight models---means what is learned here
 applies immediately to real models, not only to the course's own. The barrier
 to adoption is a software install, not a cluster.
 

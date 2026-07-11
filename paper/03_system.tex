@@ -2,34 +2,47 @@
 \label{sec:system}
 
 BabyWhale's library (\texttt{baby\_whale\_v4}, $\sim$15.8K lines of Python
-3.14 on MLX \citep{hannun2023mlx}) is a deliberately readable DeepSeek-style
+3.14 on MLX) is a deliberately readable DeepSeek-style
 stack---accompanied by 5.8K lines of tests, 2.0K lines of course tooling
 (graders, ablations, milestones), and $\sim$15K words of course text. It is
 not a toy re-implementation for the course: it is a tested system the course
 points into.
 
-\paragraph{Architecture.} A pre-norm decoder with a per-layer attention
-schedule mixing sliding-window MQA, \emph{multi-head latent attention} (MLA)
+\paragraph{Architecture.} A pre-norm decoder with RMSNorm
+\citep{zhang2019root}, rotary position embeddings \citep{su2021roformer}, and a
+per-layer attention schedule mixing sliding-window attention
+\citep{beltagy2020longformer} with MQA from the MQA/GQA family
+\citep{shazeer2019fast,ainslie2023gqa},
+\emph{multi-head latent attention} (MLA)
 that caches a low-rank latent instead of K/V \citep{deepseekai2024deepseekv2},
 and two compressed long-range variants (block-mean summaries and NSA-style
 top-$k$ selected blocks \citep{yuan2025nsa}); sparse MoE with hash-routed
-bootstrap layers and DeepSeek-V3's auxiliary-loss-free bias balancing
-\citep{deepseekai2024deepseekv3}; learned multi-branch residual streams
+bootstrap layers and SwiGLU experts \citep{shazeer2020glu}, following sparsely
+gated and Switch-style expert models
+\citep{shazeer2017outrageously,fedus2022switch}, and DeepSeek-V3's
+auxiliary-loss-free bias balancing \citep{deepseekai2024deepseekv3}; learned
+multi-branch residual streams
 \citep{zhu2024hyper}; and multi-token-prediction heads that later serve as
-speculative drafts \citep{cai2024medusa,leviathan2023fast}.
+speculative drafts \citep{gloeckle2024better,cai2024medusa,leviathan2023fast}.
 
-\paragraph{Training.} Pre-training with token-weighted gradient accumulation
-and tamper-checked checkpoints; mid-training implemented---instructively---as
-\emph{the same loop on different data}; SFT with response-only losses; DPO
+\paragraph{Training.} Byte-level BPE tokenization \citep{sennrich2016neural};
+pre-training with token-weighted gradient accumulation and tamper-checked
+checkpoints; mid-training implemented---instructively---as
+\emph{the same loop on different data}; SFT with response-only losses, as in
+instruction tuning \citep{ouyang2022training}; DPO
 \citep{rafailov2023direct} with the frozen reference's log-ratios precomputed
-once; and GRPO/RLOO \citep{shao2024deepseekmath,ahmadian2024back} against a
-sandboxed code-execution reward.
+once; and PPO, GRPO, and RLOO
+\citep{schulman2017proximal,shao2024deepseekmath,ahmadian2024back} against a
+sandboxed code-execution reward \citep{chen2021evaluating}. LoRA adapters
+\citep{hu2022lora}, weight-only post-training quantization, and quantized
+low-rank fine-tuning follow the design space established by GPTQ and QLoRA
+\citep{frantar2022gptq,dettmers2023qlora}, with MLX-native FP4 kernels.
 
 \paragraph{Inference.} A KV-cache \texttt{Protocol} with dynamic and paged
 \citep{kwon2023efficient} implementations plus CPU offload; bit-identical
 speculative decoding; and a continuous-batching server in which a single loop
 thread owns the model and cohorts of requests share batched forwards,
-including a ragged mixed-length mode.
+including a ragged mixed-length mode \citep{yu2022orca}.
 
 \paragraph{The platform as pedagogy.} MLX is not a portability compromise
 but a teaching choice, for three technical reasons and one social one.
@@ -46,8 +59,8 @@ memory behavior first-class course content rather than hidden runtime
 detail. \emph{(iv) Reach:} Apple-Silicon Macs are the daily machine of a
 large share of developers and students, and MLX carries a substantial
 ecosystem---\texttt{mlx-lm} and thousands of community-converted open-weight
-models on the Hugging Face \texttt{mlx-community} hub
-\citep{mlxlm,mlxcommunity}---so a learner's skills transfer directly from
+models on the Hugging Face \texttt{mlx-community} hub---so a learner's skills
+transfer directly from
 BabyWhale's 11M-parameter lineage to running and fine-tuning real models on
 the same machine.
 

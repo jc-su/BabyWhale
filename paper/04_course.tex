@@ -15,12 +15,11 @@ guards protect.
 
 \begin{figure}[t]
   \centering
-  \input{figures/fig_guards}
-  \caption{\textbf{Machine-checked courseware.} Three artifact types are each
-  bound to the maintained implementation by a guard---exercises by behavioral
-  equivalence (G1), displayed code by symbol existence (G2), quantitative
-  claims by regeneration scripts (G3)---and continuous integration fails when
-  any binding breaks.}
+  \resizebox{\columnwidth}{!}{\input{figures/fig_guards}}
+  \caption{\textbf{Machine-checked courseware.} Each artifact type is bound
+  to the maintained implementation by a guard (G1 behavioral equivalence, G2
+  symbol existence, G3 regeneration scripts); CI fails when any binding
+  breaks.}
   \label{fig:guards}
 \end{figure}
 
@@ -36,21 +35,19 @@ structure or protocol (paged KV, batching) the left column is the rule---the
 bridge is the same.
 
 \paragraph{Three lenses.} Modules are read through modeling/theory,
-training/alignment, and systems lenses. A systems helper prints concrete
-costs for any configuration (parameters, bf16 vs.\ FP4 weight memory, MoE
-active-vs-total experts, attention MACs), so cost arguments are never
-hand-waved.
+training/alignment, and systems lenses; a systems helper prints concrete
+costs (parameters, bf16 vs.\ FP4 memory, active experts, attention MACs) for
+any configuration.
 
 \paragraph{Three tracks, graded by the test suite.}
 \emph{Read} is the annotated narrative, which pastes the \emph{actual} key
 lines of the implementation. \emph{Build} is a set of 23 fill-in-the-blank
 labs---at least one per module---each a \texttt{NotImplementedError} stub
 whose docstring carries the derivation; running the lab grades the learner's
-code against the real module (e.g., an assembled transformer layer must match
-the library's block output tensor-for-tensor; a simple $O(nm)$ BPE encoder
-must reproduce the library's heap-based encoder token-for-token). The
-project's test suite doubles as the autograder, so correctness cannot be
-faked. \emph{Extend} prompts are open problems that become contributions.
+code against the real module (a learner's transformer layer must match the
+library's block tensor-for-tensor). The test suite doubles as the autograder,
+so correctness cannot be faked. \emph{Extend} prompts are open problems that
+become contributions.
 
 \paragraph{Progressive motivation.} A preset ladder
 (\texttt{gpt-minimal} $\to$ \texttt{+mla} $\to$ \texttt{+compressed} $\to$
